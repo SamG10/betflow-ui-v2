@@ -1,0 +1,9 @@
+.middleBottomDashboard {
+    width: 100%;
+    border-radius: 20px;
+    background-color: #1C1C24;
+}
+
+.tableContainer::-webkit-scrollbar {
+    display: none
+}
