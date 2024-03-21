@@ -1,13 +1,50 @@
 import { Button, Stack, TextField, Typography, useTheme } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 import { useBetsStore } from '../stores/betStore';
 import { Bet } from '../interfaces/bet.interface';
+import CloseIcon from '@mui/icons-material/Close';
+import styles from '../styles/RightPanel.module.css';
+import { useState } from 'react';
+import { fetchSaveBets } from '../services/bets.service';
 
 const RightPanel: React.FC = () => {
   const theme = useTheme();
 
-  const { bets, deleteBetFromBets } = useBetsStore();
-  console.log('bets in rightPanel', bets);
+  const { bets, deleteBetFromBets, deleteAllBets } = useBetsStore();
+
+  const [stakes, setStakes] = useState<{ [key: string]: number }>({});
+
+  const handleStakeChange = (betId: number, value: number) => {
+    setStakes((prevStakes) => {
+      return {
+        ...prevStakes,
+        [betId]: value,
+      };
+    });
+  };
+
+  const handleBetsToSave = () => {
+    const betsToSave = bets.map((bet) => {
+      console.log('bets on right panel', bet);
+
+      const newBet = {
+        ...bet,
+        stake: stakes[bet.eventId],
+      };
+
+      return newBet;
+    });
+
+    try {
+      fetchSaveBets(betsToSave);
+
+      // TODO: delete all bets que si le fetchSaveBets est en success
+      deleteAllBets();
+    } catch (error) {
+      console.log(`error during fetch ${error}`);
+    } finally {
+      console.log('finish');
+    }
+  };
 
   const computeTeamToDisplay = (bet: Bet) => {
     switch (bet?.team) {
@@ -22,56 +59,82 @@ const RightPanel: React.FC = () => {
 
   return (
     <>
-      <Stack width="15vw" spacing={2}>
-        <Stack>
-          <img
-            src="src\assets\promosvg.svg"
-            alt="promo-img"
-            style={{ width: '15vw' }}
-          />
+      <Stack
+        display="flex"
+        flexDirection="column"
+        width="20%"
+        justifyContent="space-between"
+      >
+        <Stack
+          bgcolor={theme.palette.background.paper}
+          className={styles.gradient_promo}
+          borderRadius="20px"
+          display="flex"
+          justifyContent="space-around"
+          padding="20px"
+          height="30%"
+        >
+          <img src="src\assets\fire.svg" alt="fire" width="45px" />
+          <Typography variant="h5">Double your winnings today only!</Typography>
+          <Typography variant="caption">
+            Pick your bet, double your rewards with Betflow, available for
+            one-time use!
+          </Typography>
         </Stack>
         <Stack
-          style={{
-            backgroundColor: theme.palette.background.paper,
-            borderRadius: '20px',
-          }}
+          flexDirection="column"
           padding="10px"
           spacing={1}
-          height="50vh"
-          justifyContent="space-between"
+          bgcolor={theme.palette.background.paper}
+          borderRadius="20px"
+          height="calc(100% - 38%)"
         >
-          {bets?.map((bet) => (
-            <Stack
-              border={2}
-              borderRadius="8px"
-              borderColor={theme.palette.primary.main}
-              padding="8px"
-            >
-              <Stack direction="column">
-                <Stack direction="row" spacing={2}>
+          <Typography variant="h6">{bets.length} bets selected</Typography>
+          <div className={styles.displayBets}>
+            {bets?.map((bet) => (
+              <Stack
+                key={bet.eventId}
+                flexDirection="column"
+                spacing={1}
+                padding="5px"
+                border="1px solid rgba(255,255,255, 15%)"
+                borderRadius="8px"
+                marginBottom={1}
+              >
+                <Stack flexDirection="row" justifyContent="space-between">
                   <Typography variant="caption">
                     {bet.homeTeam} - {bet.awayTeam}
                   </Typography>
                   <CloseIcon onClick={() => deleteBetFromBets(bet)} />
                 </Stack>
-                <Stack direction="row" spacing={2}>
+                <Stack flexDirection="row" justifyContent="space-between">
                   <Typography variant="h6">
                     {computeTeamToDisplay(bet)}
                   </Typography>
-                  <Button variant="contained">{bet.odds}</Button>
+                  <Button variant="outlined">{bet.odd}</Button>
                 </Stack>
-                <TextField variant="outlined" type="number" />
+                <Stack>
+                  <TextField
+                    variant="outlined"
+                    placeholder="stake"
+                    type="number"
+                    size="small"
+                    onChange={(e) =>
+                      handleStakeChange(
+                        bet.eventId,
+                        parseInt(e.target.value, 10)
+                      )
+                    }
+                  />
+                </Stack>
               </Stack>
-            </Stack>
-          ))}
-          <Button
-            variant="contained"
-            onClick={() => {
-              console.log('save');
-            }}
-          >
-            Save Bets
-          </Button>
+            ))}
+          </div>
+          <Stack bgcolor="#1C1C24" zIndex={1000}>
+            <Button variant="contained" onClick={() => handleBetsToSave()}>
+              Save bets
+            </Button>
+          </Stack>
         </Stack>
       </Stack>
     </>

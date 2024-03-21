@@ -25,7 +25,7 @@ const MiddleTopDashboard: React.FC = () => {
 
   return (
     <>
-      <Stack direction="column" height="45vh">
+      <Stack direction="column" height="auto">
         <Stack
           direction="row"
           spacing={2}
@@ -35,7 +35,7 @@ const MiddleTopDashboard: React.FC = () => {
           width="100%"
         >
           <Stack direction="row" spacing={2} width="40%">
-            <FormControl fullWidth sx={{ color: 'success.main' }}>
+            <FormControl fullWidth size="small">
               <InputLabel id="demo-simple-select-label">Sport</InputLabel>
               <Select
                 labelId="sport"
@@ -47,6 +47,7 @@ const MiddleTopDashboard: React.FC = () => {
                   '& .MuiInputBase-input': {
                     backgroundColor: '#00A0F7',
                     border: 'none',
+                    borderRadius: '50px',
                   },
                 }}
               >
@@ -54,7 +55,7 @@ const MiddleTopDashboard: React.FC = () => {
                 <MenuItem value={20}>Other sport coming soon</MenuItem>
               </Select>
             </FormControl>
-            <FormControl fullWidth>
+            <FormControl fullWidth size="small">
               <InputLabel id="demo-simple-select-label">League</InputLabel>
               <Select
                 labelId="league"
@@ -66,6 +67,7 @@ const MiddleTopDashboard: React.FC = () => {
                   '& .MuiInputBase-input': {
                     backgroundColor: '#00A0F7',
                     border: 'none',
+                    borderRadius: '50px',
                   },
                 }}
               >
@@ -81,7 +83,7 @@ const MiddleTopDashboard: React.FC = () => {
 
         <Stack
           style={{
-            height: '300px',
+            height: '280px',
             backgroundColor: theme.palette.background.paper,
             width: '100%',
             borderRadius: '20px',
