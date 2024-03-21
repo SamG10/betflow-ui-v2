@@ -1,20 +1,33 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
-import Layout from './layouts/Layout';
 import { ThemeProvider } from '@mui/material';
 import theme from './themes/theme';
+import LiveEvents from './pages/LiveEvents';
+import Dashboard from './pages/Dashboard';
+import MyBets from './pages/MyBets';
+import Layout from './layouts/Layout';
+import styles from './styles/App.module.css';
+import Register from './pages/Register';
+import Login from './pages/Login';
 
 function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
         <BrowserRouter>
-          <Layout>
-            <Routes>
-              <Route element={<Home />} path="/" />
-            </Routes>
-          </Layout>
+          <div className={styles.layout_container}>
+            <Layout>
+              <div className={styles.page_content}>
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/liveEvents" element={<LiveEvents />} />
+                  <Route path="/myBets" element={<MyBets />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/login" element={<Login />} />
+                </Routes>
+              </div>
+            </Layout>
+          </div>
         </BrowserRouter>
       </ThemeProvider>
     </>

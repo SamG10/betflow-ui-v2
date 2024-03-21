@@ -34,9 +34,9 @@ const MiddleBottomDashboard: React.FC = () => {
     fetchEvents();
   }, []);
 
-  console.log('events', events);
+  console.log(events);
 
-  const addEventsToBets = (bet: Bet) => {
+  const addEventsToBets = (bet) => {
     addBetToBets(bet);
     // if (bets.some((e) => bet.eventId === e.eventId)) {
     //   const index = bets.findIndex((t) => t.eventId === bet.eventId);
@@ -49,7 +49,7 @@ const MiddleBottomDashboard: React.FC = () => {
 
   return (
     <>
-      <Stack className={styles.middleBottomDashboard} height="55vh">
+      <Stack className={styles.middleBottomDashboard} height="53vh">
         <Stack direction="row">
           <TableContainer
             className={styles.tableContainer}
@@ -129,11 +129,19 @@ const MiddleBottomDashboard: React.FC = () => {
                         onClick={() =>
                           addEventsToBets({
                             eventId: event.id,
-                            odds: event.odds.homeWin,
+                            odd: event.odds.homeWin,
                             team: 'HOME_TEAM',
                             homeTeam: event.homeTeam.name,
                             awayTeam: event.awayTeam.name,
                             endDateEvent: event.lastUpdated,
+                            homeTeamOdd: event.odds.homeWin,
+                            awayTeamOdd: event.odds.awayWin,
+                            drawTeamOdd: event.odds.draw,
+                            homeTeamName: event.homeTeam.name,
+                            awayTeamName: event.awayTeam.name,
+                            homeTeamLogo: event.homeTeam.crest,
+                            awayTeamLogo: event.awayTeam.crest,
+                            eventDate: event.utcDate,
                           })
                         }
                       >
@@ -154,11 +162,19 @@ const MiddleBottomDashboard: React.FC = () => {
                         onClick={() =>
                           addEventsToBets({
                             eventId: event.id,
-                            odds: event.odds.draw,
+                            odd: event.odds.draw,
                             team: 'DRAW',
                             homeTeam: event.homeTeam.name,
                             awayTeam: event.awayTeam.name,
                             endDateEvent: event.lastUpdated,
+                            homeTeamOdd: event.odds.homeWin,
+                            awayTeamOdd: event.odds.awayWin,
+                            drawTeamOdd: event.odds.draw,
+                            homeTeamName: event.homeTeam.name,
+                            awayTeamName: event.awayTeam.name,
+                            homeTeamLogo: event.homeTeam.crest,
+                            awayTeamLogo: event.awayTeam.crest,
+                            eventDate: event.utcDate,
                           })
                         }
                       >
@@ -179,11 +195,19 @@ const MiddleBottomDashboard: React.FC = () => {
                         onClick={() =>
                           addEventsToBets({
                             eventId: event.id,
-                            odds: event.odds.awayWin,
+                            odd: event.odds.awayWin,
                             team: 'AWAY_TEAM',
                             homeTeam: event.homeTeam.name,
                             awayTeam: event.awayTeam.name,
                             endDateEvent: event.lastUpdated,
+                            homeTeamOdd: event.odds.homeWin,
+                            awayTeamOdd: event.odds.awayWin,
+                            drawTeamOdd: event.odds.draw,
+                            homeTeamName: event.homeTeam.name,
+                            awayTeamName: event.awayTeam.name,
+                            homeTeamLogo: event.homeTeam.crest,
+                            awayTeamLogo: event.awayTeam.crest,
+                            eventDate: event.utcDate,
                           })
                         }
                       >
