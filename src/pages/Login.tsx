@@ -6,83 +6,101 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../services/users.service';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const loginSchema = z.object({
+  email: z.string().email('Invalid email').min(1, 'Email is required'),
+  password: z.string().min(3, 'Password must be at least 3 characters long'),
+});
+type FormData = z.infer<typeof loginSchema>;
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+
+  const defaultValues = {
     email: '',
     password: '',
+  };
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues,
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
+    await loginUser(data);
+    reset();
+    navigate('/');
   };
 
-  console.log(formData);
-
-  const handleSubmit = async (e) => {
-    try {
-      e.preventDefault();
-      await loginUser(formData);
-      navigate('/');
-    } catch (error) {
-      console.log('error');
-    }
-  };
   return (
     <>
       <Stack
+        width="calc(100vw - 250px)"
+        height="100vh"
         display="flex"
-        flexDirection="column"
         justifyContent="center"
         alignItems="center"
-        spacing={5}
-        padding="10px"
-        bgcolor="#1C1C24"
-        borderRadius="20px"
-        width="250px"
       >
-        <Typography variant="h3">Login</Typography>
-        <form onSubmit={handleSubmit}>
-          <FormControl
-            fullWidth
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
-            <Stack>
-              <FormLabel>Email</FormLabel>
-              <TextField
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                sx={{ marginBottom: '10px' }}
-              />
-            </Stack>
-            <Stack>
-              <FormLabel>Password</FormLabel>
-              <TextField
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-                sx={{ marginBottom: '10px' }}
-              />
-            </Stack>
-            <Button type="submit" variant="contained">
-              Login
-            </Button>
-          </FormControl>
-        </form>
+        <Stack
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+          spacing={5}
+          padding="10px"
+          bgcolor="#1C1C24"
+          borderRadius="20px"
+          width="250px"
+        >
+          <Typography variant="h3">Login</Typography>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <FormControl
+              fullWidth
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+              <Stack>
+                <FormLabel>Email</FormLabel>
+                <TextField
+                  type="email"
+                  {...register('email')}
+                  defaultValue={defaultValues.email}
+                  error={!!errors.email}
+                  helperText={errors.email?.message}
+                  sx={{ marginBottom: '10px' }}
+                />
+              </Stack>
+              <Stack>
+                <FormLabel>Password</FormLabel>
+                <TextField
+                  type="password"
+                  {...register('password')}
+                  defaultValue={defaultValues.password}
+                  error={!!errors.password}
+                  helperText={errors.password?.message}
+                  sx={{ marginBottom: '10px' }}
+                />
+              </Stack>
+              <Button type="submit" variant="contained">
+                Login
+              </Button>
+            </FormControl>
+          </form>
+        </Stack>
       </Stack>
     </>
   );

@@ -1,15 +1,11 @@
 import api from './api';
 
-export const fetchSaveBets = (betsToSave) => {
+export const fetchSaveBets = async (betsToSave) => {
   const access_token = localStorage.getItem('access_token');
 
-  try {
-    api.post('/bets', betsToSave, {
-      headers: {
-        Authorization: `Bearer ${access_token} `,
-      },
-    });
-  } catch (error) {
-    console.log('error');
-  }
+  await api.post('/bets', betsToSave, {
+    headers: {
+      Authorization: `Bearer ${access_token} `,
+    },
+  });
 };

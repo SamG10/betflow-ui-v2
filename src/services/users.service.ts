@@ -47,3 +47,15 @@ export const getUserInfo = async () => {
 
   return response.data;
 };
+
+export const getRanking = async () => {
+  const access_token = localStorage.getItem('access_token');
+
+  const response = await api.get('users/ranking', {
+    headers: {
+      Authorization: `Bearer ${access_token} `,
+    },
+  });
+
+  return response.data;
+};
