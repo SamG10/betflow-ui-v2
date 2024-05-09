@@ -19,7 +19,7 @@ import { Event } from '../interfaces/event.interface';
 
 const MiddleBottomDashboard: React.FC = () => {
   const [events, setEvents] = useState([]);
-  const [bets, setBets] = useState([]);
+  const bets = useBetsStore((state) => state.bets);
 
   const { addBetToBets } = useBetsStore();
 
@@ -34,28 +34,29 @@ const MiddleBottomDashboard: React.FC = () => {
     fetchEvents();
   }, []);
 
-  console.log(events);
-
   const addEventsToBets = (bet) => {
-    addBetToBets(bet);
-    // if (bets.some((e) => bet.eventId === e.eventId)) {
-    //   const index = bets.findIndex((t) => t.eventId === bet.eventId);
-    //   bets.splice(index, 1);
-    //   setBets([...bets]);
-    // } else {
-    //   setBets((oldBet) => [...oldBet, bet]);
-    // }
+    console.log('bet', bet);
+    console.log('bets', bets);
+
+    const existingBet = bets.find(
+      (existingBet) => existingBet.eventId == bet.eventId
+    );
+    console.log('existingBet', existingBet);
+
+    if (!existingBet) {
+      addBetToBets(bet);
+    }
   };
 
   return (
     <>
-      <Stack className={styles.middleBottomDashboard} height="53vh">
+      <Stack className={styles.middleBottomDashboard} height="auto">
         <Stack direction="row">
           <TableContainer
             className={styles.tableContainer}
             component={Paper}
             sx={{
-              height: '450px',
+              height: '410px',
               width: '100%',
               borderRadius: '20px',
               overflowX: 'scroll',
@@ -85,158 +86,159 @@ const MiddleBottomDashboard: React.FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {events?.map((event: Event) => (
-                  <TableRow key={event.id}>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      sx={{ borderBottom: 'none' }}
-                    >
-                      {event.utcDate.split('T')[0]}
-                    </TableCell>
-                    <TableCell
-                      align="center"
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        borderBottom: 'none',
-                      }}
-                    >
-                      <Typography
-                        variant="caption"
-                        sx={{ marginRight: '10px', width: '150px' }}
+                {events.length > 0 &&
+                  events?.map((event: Event) => (
+                    <TableRow key={event.id}>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        sx={{ borderBottom: 'none' }}
                       >
-                        {event.homeTeam.name}
-                      </Typography>
-                      <img
-                        src={event.homeTeam.crest}
-                        alt="home_team_logo"
-                        width="50px"
-                      />
-                    </TableCell>
-                    <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                      <Button
-                        variant={
-                          bets[
-                            bets.findIndex(
-                              (bet: Bet) => bet.eventId === event.id
-                            )
-                          ]?.team === 'HOME_TEAM'
-                            ? 'contained'
-                            : 'outlined'
-                        }
-                        onClick={() =>
-                          addEventsToBets({
-                            eventId: event.id,
-                            odd: event.odds.homeWin,
-                            team: 'HOME_TEAM',
-                            homeTeam: event.homeTeam.name,
-                            awayTeam: event.awayTeam.name,
-                            endDateEvent: event.lastUpdated,
-                            homeTeamOdd: event.odds.homeWin,
-                            awayTeamOdd: event.odds.awayWin,
-                            drawTeamOdd: event.odds.draw,
-                            homeTeamName: event.homeTeam.name,
-                            awayTeamName: event.awayTeam.name,
-                            homeTeamLogo: event.homeTeam.crest,
-                            awayTeamLogo: event.awayTeam.crest,
-                            eventDate: event.utcDate,
-                          })
-                        }
+                        {event.utcDate.split('T')[0]}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          borderBottom: 'none',
+                        }}
                       >
-                        {event.odds.homeWin}
-                      </Button>
-                    </TableCell>
-                    <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                      <Button
-                        variant={
-                          bets[
-                            bets.findIndex(
-                              (bet: Bet) => bet.eventId === event.id
-                            )
-                          ]?.team === 'DRAW'
-                            ? 'contained'
-                            : 'outlined'
-                        }
-                        onClick={() =>
-                          addEventsToBets({
-                            eventId: event.id,
-                            odd: event.odds.draw,
-                            team: 'DRAW',
-                            homeTeam: event.homeTeam.name,
-                            awayTeam: event.awayTeam.name,
-                            endDateEvent: event.lastUpdated,
-                            homeTeamOdd: event.odds.homeWin,
-                            awayTeamOdd: event.odds.awayWin,
-                            drawTeamOdd: event.odds.draw,
-                            homeTeamName: event.homeTeam.name,
-                            awayTeamName: event.awayTeam.name,
-                            homeTeamLogo: event.homeTeam.crest,
-                            awayTeamLogo: event.awayTeam.crest,
-                            eventDate: event.utcDate,
-                          })
-                        }
+                        <Typography
+                          variant="caption"
+                          sx={{ marginRight: '10px', width: '150px' }}
+                        >
+                          {event.homeTeam.name}
+                        </Typography>
+                        <img
+                          src={event.homeTeam.crest}
+                          alt="home_team_logo"
+                          width="50px"
+                        />
+                      </TableCell>
+                      <TableCell align="center" sx={{ borderBottom: 'none' }}>
+                        <Button
+                          variant={
+                            bets[
+                              bets.findIndex(
+                                (bet: Bet) => bet.eventId === event.id
+                              )
+                            ]?.team === 'HOME_TEAM'
+                              ? 'contained'
+                              : 'outlined'
+                          }
+                          onClick={() =>
+                            addEventsToBets({
+                              eventId: event.id,
+                              odd: event.odds.homeWin,
+                              team: 'HOME_TEAM',
+                              homeTeam: event.homeTeam.name,
+                              awayTeam: event.awayTeam.name,
+                              endDateEvent: event.lastUpdated,
+                              homeTeamOdd: event.odds.homeWin,
+                              awayTeamOdd: event.odds.awayWin,
+                              drawTeamOdd: event.odds.draw,
+                              homeTeamName: event.homeTeam.name,
+                              awayTeamName: event.awayTeam.name,
+                              homeTeamLogo: event.homeTeam.crest,
+                              awayTeamLogo: event.awayTeam.crest,
+                              eventDate: event.utcDate,
+                            })
+                          }
+                        >
+                          {event.odds.homeWin}
+                        </Button>
+                      </TableCell>
+                      <TableCell align="center" sx={{ borderBottom: 'none' }}>
+                        <Button
+                          variant={
+                            bets[
+                              bets.findIndex(
+                                (bet: Bet) => bet.eventId === event.id
+                              )
+                            ]?.team === 'DRAW'
+                              ? 'contained'
+                              : 'outlined'
+                          }
+                          onClick={() =>
+                            addEventsToBets({
+                              eventId: event.id,
+                              odd: event.odds.draw,
+                              team: 'DRAW',
+                              homeTeam: event.homeTeam.name,
+                              awayTeam: event.awayTeam.name,
+                              endDateEvent: event.lastUpdated,
+                              homeTeamOdd: event.odds.homeWin,
+                              awayTeamOdd: event.odds.awayWin,
+                              drawTeamOdd: event.odds.draw,
+                              homeTeamName: event.homeTeam.name,
+                              awayTeamName: event.awayTeam.name,
+                              homeTeamLogo: event.homeTeam.crest,
+                              awayTeamLogo: event.awayTeam.crest,
+                              eventDate: event.utcDate,
+                            })
+                          }
+                        >
+                          {event.odds.draw}
+                        </Button>
+                      </TableCell>
+                      <TableCell align="center" sx={{ borderBottom: 'none' }}>
+                        <Button
+                          variant={
+                            bets[
+                              bets.findIndex(
+                                (bet: Bet) => bet.eventId === event.id
+                              )
+                            ]?.team === 'AWAY_TEAM'
+                              ? 'contained'
+                              : 'outlined'
+                          }
+                          onClick={() =>
+                            addEventsToBets({
+                              eventId: event.id,
+                              odd: event.odds.awayWin,
+                              team: 'AWAY_TEAM',
+                              homeTeam: event.homeTeam.name,
+                              awayTeam: event.awayTeam.name,
+                              endDateEvent: event.lastUpdated,
+                              homeTeamOdd: event.odds.homeWin,
+                              awayTeamOdd: event.odds.awayWin,
+                              drawTeamOdd: event.odds.draw,
+                              homeTeamName: event.homeTeam.name,
+                              awayTeamName: event.awayTeam.name,
+                              homeTeamLogo: event.homeTeam.crest,
+                              awayTeamLogo: event.awayTeam.crest,
+                              eventDate: event.utcDate,
+                            })
+                          }
+                        >
+                          {event.odds.awayWin}
+                        </Button>
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          borderBottom: 'none',
+                        }}
                       >
-                        {event.odds.draw}
-                      </Button>
-                    </TableCell>
-                    <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                      <Button
-                        variant={
-                          bets[
-                            bets.findIndex(
-                              (bet: Bet) => bet.eventId === event.id
-                            )
-                          ]?.team === 'AWAY_TEAM'
-                            ? 'contained'
-                            : 'outlined'
-                        }
-                        onClick={() =>
-                          addEventsToBets({
-                            eventId: event.id,
-                            odd: event.odds.awayWin,
-                            team: 'AWAY_TEAM',
-                            homeTeam: event.homeTeam.name,
-                            awayTeam: event.awayTeam.name,
-                            endDateEvent: event.lastUpdated,
-                            homeTeamOdd: event.odds.homeWin,
-                            awayTeamOdd: event.odds.awayWin,
-                            drawTeamOdd: event.odds.draw,
-                            homeTeamName: event.homeTeam.name,
-                            awayTeamName: event.awayTeam.name,
-                            homeTeamLogo: event.homeTeam.crest,
-                            awayTeamLogo: event.awayTeam.crest,
-                            eventDate: event.utcDate,
-                          })
-                        }
-                      >
-                        {event.odds.awayWin}
-                      </Button>
-                    </TableCell>
-                    <TableCell
-                      align="center"
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        borderBottom: 'none',
-                      }}
-                    >
-                      <Typography
-                        variant="caption"
-                        sx={{ marginRight: '10px', width: '150px' }}
-                      >
-                        {event.awayTeam.name}
-                      </Typography>
-                      <img
-                        src={event.awayTeam.crest}
-                        alt="home_team_logo"
-                        width="50px"
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
+                        <Typography
+                          variant="caption"
+                          sx={{ marginRight: '10px', width: '150px' }}
+                        >
+                          {event.awayTeam.name}
+                        </Typography>
+                        <img
+                          src={event.awayTeam.crest}
+                          alt="home_team_logo"
+                          width="50px"
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>

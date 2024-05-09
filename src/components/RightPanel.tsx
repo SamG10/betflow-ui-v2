@@ -1,4 +1,11 @@
-import { Button, Stack, TextField, Typography, useTheme } from '@mui/material';
+import {
+  Button,
+  Snackbar,
+  Stack,
+  TextField,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import { useBetsStore } from '../stores/betStore';
 import { Bet } from '../interfaces/bet.interface';
 import CloseIcon from '@mui/icons-material/Close';
@@ -13,6 +20,10 @@ const RightPanel: React.FC = () => {
 
   const [stakes, setStakes] = useState<{ [key: string]: number }>({});
 
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const handleStakeChange = (betId: number, value: number) => {
     setStakes((prevStakes) => {
       return {
@@ -22,10 +33,8 @@ const RightPanel: React.FC = () => {
     });
   };
 
-  const handleBetsToSave = () => {
+  const handleBetsToSave = async () => {
     const betsToSave = bets.map((bet) => {
-      console.log('bets on right panel', bet);
-
       const newBet = {
         ...bet,
         stake: stakes[bet.eventId],
@@ -35,14 +44,14 @@ const RightPanel: React.FC = () => {
     });
 
     try {
-      fetchSaveBets(betsToSave);
-
-      // TODO: delete all bets que si le fetchSaveBets est en success
+      // TODO: Pourquoi je ne passe jamais dans le catch ici
+      await fetchSaveBets(betsToSave);
       deleteAllBets();
     } catch (error) {
-      console.log(`error during fetch ${error}`);
+      setOpen(true);
+      setError(error.message);
     } finally {
-      console.log('finish');
+      setLoading(false);
     }
   };
 
@@ -135,6 +144,14 @@ const RightPanel: React.FC = () => {
               Save bets
             </Button>
           </Stack>
+          <Snackbar
+            sx={{ backgroundColor: 'orange', color: 'orange' }}
+            open={open}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            autoHideDuration={6000}
+            onClose={() => setOpen(false)}
+            message={error}
+          />
         </Stack>
       </Stack>
     </>

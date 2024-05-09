@@ -27,8 +27,6 @@ const LeftNavigationBar: React.FC = () => {
     fetchUserInfo();
   }, []);
 
-  console.log(' grîehgpsrh', user);
-
   const logout = () => {
     logoutUser();
     setAccessToken(undefined);
@@ -57,7 +55,9 @@ const LeftNavigationBar: React.FC = () => {
                 alt="betflow logo"
                 width="25px"
               />
-              <Typography variant="h6">{user.coins} coins</Typography>
+              <Typography variant="h6">
+                {user.coins?.toFixed(2)} coins
+              </Typography>
             </Stack>
           </Stack>
         ) : (

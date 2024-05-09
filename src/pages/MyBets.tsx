@@ -29,8 +29,6 @@ const MyBets: React.FC = () => {
     fetchUserInfo();
   }, []);
 
-  console.log('userInfo: ', userInfo);
-
   return (
     <>
       <Typography variant="h5">My Bets</Typography>
@@ -69,6 +67,12 @@ const MyBets: React.FC = () => {
                 <TableCell align="center" sx={{ borderBottom: 'none' }}>
                   Win / Loss
                 </TableCell>
+                <TableCell align="center" sx={{ borderBottom: 'none' }}>
+                  Stake
+                </TableCell>
+                <TableCell align="center" sx={{ borderBottom: 'none' }}>
+                  CoinsGain
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -103,13 +107,31 @@ const MyBets: React.FC = () => {
                     />
                   </TableCell>
                   <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                    <Button variant="outlined">{bet.homeTeamOdd}</Button>
+                    <Button
+                      variant={
+                        bet?.odd === bet.homeTeamOdd ? 'contained' : 'outlined'
+                      }
+                    >
+                      {bet.homeTeamOdd}
+                    </Button>
                   </TableCell>
                   <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                    <Button variant="outlined">{bet.drawTeamOdd}</Button>
+                    <Button
+                      variant={
+                        bet?.odd === bet.drawTeamOdd ? 'contained' : 'outlined'
+                      }
+                    >
+                      {bet.drawTeamOdd}
+                    </Button>
                   </TableCell>
                   <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                    <Button variant="outlined">{bet.awayTeamOdd}</Button>
+                    <Button
+                      variant={
+                        bet?.odd === bet.awayTeamOdd ? 'contained' : 'outlined'
+                      }
+                    >
+                      {bet.awayTeamOdd}
+                    </Button>
                   </TableCell>
                   <TableCell
                     align="center"
@@ -138,6 +160,14 @@ const MyBets: React.FC = () => {
                   <TableCell align="center" sx={{ borderBottom: 'none' }}>
                     <Typography variant="body">
                       {bet?.betResult ?? 'None result for this moment'}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center" sx={{ borderBottom: 'none' }}>
+                    <Typography variant="body">{bet?.stake}</Typography>
+                  </TableCell>
+                  <TableCell align="center" sx={{ borderBottom: 'none' }}>
+                    <Typography variant="body">
+                      {bet?.payed ? bet?.coinsGain : 'Bet in progress'}
                     </Typography>
                   </TableCell>
                 </TableRow>

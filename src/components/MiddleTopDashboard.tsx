@@ -1,4 +1,5 @@
 import {
+  Avatar,
   FormControl,
   InputLabel,
   MenuItem,
@@ -8,12 +9,15 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import CustomSelect from './CustomSelect';
+import { getRanking } from '../services/users.service';
 
 const MiddleTopDashboard: React.FC = () => {
   const theme = useTheme();
   const [sport, setSport] = useState<string>('');
   const [league, setLeague] = useState<string>('');
+  const [rankingUsers, setRankingUsers] = useState([]);
 
   const handleChangeSport = (event: SelectChangeEvent) => {
     setSport(event.target.value as string);
@@ -23,9 +27,22 @@ const MiddleTopDashboard: React.FC = () => {
     setLeague(event.target.value as string);
   };
 
+  useEffect(() => {
+    const usersRanking = async () => {
+      try {
+        const ranking = await getRanking();
+        setRankingUsers(ranking);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    usersRanking();
+  }, []);
+
   return (
     <>
-      <Stack direction="column" height="auto">
+      <Stack direction="column">
         <Stack
           direction="row"
           spacing={2}
@@ -35,60 +52,75 @@ const MiddleTopDashboard: React.FC = () => {
           width="100%"
         >
           <Stack direction="row" spacing={2} width="40%">
-            <FormControl fullWidth size="small">
-              <InputLabel id="demo-simple-select-label">Sport</InputLabel>
-              <Select
-                labelId="sport"
-                id="sport"
-                value={sport}
-                label="Sport"
-                onChange={handleChangeSport}
-                sx={{
-                  '& .MuiInputBase-input': {
-                    backgroundColor: '#00A0F7',
-                    border: 'none',
-                    borderRadius: '50px',
-                  },
-                }}
-              >
-                <MenuItem value={10}>Soccer</MenuItem>
-                <MenuItem value={20}>Other sport coming soon</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl fullWidth size="small">
-              <InputLabel id="demo-simple-select-label">League</InputLabel>
-              <Select
-                labelId="league"
-                id="league"
-                value={league}
-                label="League"
-                onChange={handleChangeLeague}
-                sx={{
-                  '& .MuiInputBase-input': {
-                    backgroundColor: '#00A0F7',
-                    border: 'none',
-                    borderRadius: '50px',
-                  },
-                }}
-              >
-                <MenuItem value={10}>Ligue 1</MenuItem>
-                <MenuItem value={20}>Euro</MenuItem>
-              </Select>
-            </FormControl>
+            <CustomSelect values={['Soccer', 'Basketball', 'Formula 1']} />
+            <CustomSelect values={['Ligue 1', 'Euro']} />
           </Stack>
-          <Stack>
-            <Typography>{new Date().toDateString()}</Typography>
-          </Stack>
+          <Typography>{new Date().toDateString()}</Typography>
         </Stack>
 
         <Stack
-          style={{
-            height: '280px',
-            backgroundColor: theme.palette.background.paper,
-            width: '100%',
-            borderRadius: '20px',
-          }}
-        ></Stack>
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          direction="row"
+        >
+          <Stack
+            bgcolor={theme.palette.background.paper}
+            height="270px"
+            width="calc((100% / 3) - 30px)"
+            borderRadius="20px"
+            padding="10px"
+          ></Stack>
+          <Stack
+            bgcolor={theme.palette.background.paper}
+            height="270px"
+            width="calc((100% / 3) - 30px)"
+            borderRadius="20px"
+            padding="10px"
+          ></Stack>
+          <Stack
+            bgcolor={theme.palette.background.paper}
+            height="270px"
+            width="calc((100% / 3) - 30px)"
+            borderRadius="20px"
+            display="flex"
+            padding="10px"
+          >
+            <Stack>
+              <Typography variant="h5" marginBottom={2}>
+                Ranking
+              </Typography>
+              {rankingUsers.map((users, index) => {
+                const indexColor = Object.values([1, 2, 3]).includes(index + 1)
+                  ? '#F5DD61'
+                  : 'white';
+                return (
+                  <Stack
+                    direction="row"
+                    spacing={2}
+                    borderBottom="1px solid #FFFFFF"
+                    display="flex"
+                    alignItems="center"
+                    key={index}
+                  >
+                    <Typography variant="h6" fontWeight="bold">
+                      {index + 1}
+                    </Typography>
+                    <Avatar sx={{ width: 24, height: 24 }} />
+                    <Typography
+                      variant="body1"
+                      color={indexColor}
+                      fontWeight="bold"
+                    >
+                      {users.coins}
+                    </Typography>
+                    <Typography variant="body1">{users.firstname}</Typography>
+                  </Stack>
+                );
+              })}
+            </Stack>
+          </Stack>
+        </Stack>
       </Stack>
     </>
   );

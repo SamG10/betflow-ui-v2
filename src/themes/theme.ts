@@ -44,5 +44,12 @@ export default createTheme({
         },
       },
     },
+    MuiFormLabel: {
+      styleOverrides: {
+        root: {
+          color: '#ffffff',
+        },
+      },
+    },
   },
 });
