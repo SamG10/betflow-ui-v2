@@ -128,26 +128,28 @@ const MiddleBottomDashboard: React.FC = () => {
                               ? 'contained'
                               : 'outlined'
                           }
-                          onClick={() =>
-                            addEventsToBets({
-                              eventId: event.id,
-                              odd: event.odds.homeWin,
-                              team: 'HOME_TEAM',
-                              homeTeam: event.homeTeam.name,
-                              awayTeam: event.awayTeam.name,
-                              endDateEvent: event.lastUpdated,
-                              homeTeamOdd: event.odds.homeWin,
-                              awayTeamOdd: event.odds.awayWin,
-                              drawTeamOdd: event.odds.draw,
-                              homeTeamName: event.homeTeam.name,
-                              awayTeamName: event.awayTeam.name,
-                              homeTeamLogo: event.homeTeam.crest,
-                              awayTeamLogo: event.awayTeam.crest,
-                              eventDate: event.utcDate,
-                            })
-                          }
+                          onClick={() => {
+                            if (event.odds.homeWin) {
+                              addEventsToBets({
+                                eventId: event.id,
+                                odd: event.odds.homeWin,
+                                team: 'HOME_TEAM',
+                                homeTeam: event.homeTeam.name,
+                                awayTeam: event.awayTeam.name,
+                                endDateEvent: event.lastUpdated,
+                                homeTeamOdd: event.odds.homeWin,
+                                awayTeamOdd: event.odds.awayWin,
+                                drawTeamOdd: event.odds.draw,
+                                homeTeamName: event.homeTeam.name,
+                                awayTeamName: event.awayTeam.name,
+                                homeTeamLogo: event.homeTeam.crest,
+                                awayTeamLogo: event.awayTeam.crest,
+                                eventDate: event.utcDate,
+                              });
+                            }
+                          }}
                         >
-                          {event.odds.homeWin}
+                          {event.odds.homeWin ?? 'X'}
                         </Button>
                       </TableCell>
                       <TableCell align="center" sx={{ borderBottom: 'none' }}>
@@ -161,26 +163,28 @@ const MiddleBottomDashboard: React.FC = () => {
                               ? 'contained'
                               : 'outlined'
                           }
-                          onClick={() =>
-                            addEventsToBets({
-                              eventId: event.id,
-                              odd: event.odds.draw,
-                              team: 'DRAW',
-                              homeTeam: event.homeTeam.name,
-                              awayTeam: event.awayTeam.name,
-                              endDateEvent: event.lastUpdated,
-                              homeTeamOdd: event.odds.homeWin,
-                              awayTeamOdd: event.odds.awayWin,
-                              drawTeamOdd: event.odds.draw,
-                              homeTeamName: event.homeTeam.name,
-                              awayTeamName: event.awayTeam.name,
-                              homeTeamLogo: event.homeTeam.crest,
-                              awayTeamLogo: event.awayTeam.crest,
-                              eventDate: event.utcDate,
-                            })
-                          }
+                          onClick={() => {
+                            if (event.odds.homeWin) {
+                              addEventsToBets({
+                                eventId: event.id,
+                                odd: event.odds.draw,
+                                team: 'DRAW',
+                                homeTeam: event.homeTeam.name,
+                                awayTeam: event.awayTeam.name,
+                                endDateEvent: event.lastUpdated,
+                                homeTeamOdd: event.odds.homeWin,
+                                awayTeamOdd: event.odds.awayWin,
+                                drawTeamOdd: event.odds.draw,
+                                homeTeamName: event.homeTeam.name,
+                                awayTeamName: event.awayTeam.name,
+                                homeTeamLogo: event.homeTeam.crest,
+                                awayTeamLogo: event.awayTeam.crest,
+                                eventDate: event.utcDate,
+                              });
+                            }
+                          }}
                         >
-                          {event.odds.draw}
+                          {event.odds.draw ?? 'X'}
                         </Button>
                       </TableCell>
                       <TableCell align="center" sx={{ borderBottom: 'none' }}>
@@ -194,26 +198,28 @@ const MiddleBottomDashboard: React.FC = () => {
                               ? 'contained'
                               : 'outlined'
                           }
-                          onClick={() =>
-                            addEventsToBets({
-                              eventId: event.id,
-                              odd: event.odds.awayWin,
-                              team: 'AWAY_TEAM',
-                              homeTeam: event.homeTeam.name,
-                              awayTeam: event.awayTeam.name,
-                              endDateEvent: event.lastUpdated,
-                              homeTeamOdd: event.odds.homeWin,
-                              awayTeamOdd: event.odds.awayWin,
-                              drawTeamOdd: event.odds.draw,
-                              homeTeamName: event.homeTeam.name,
-                              awayTeamName: event.awayTeam.name,
-                              homeTeamLogo: event.homeTeam.crest,
-                              awayTeamLogo: event.awayTeam.crest,
-                              eventDate: event.utcDate,
-                            })
-                          }
+                          onClick={() => {
+                            if (event.odds.homeWin) {
+                              addEventsToBets({
+                                eventId: event.id,
+                                odd: event.odds.awayWin,
+                                team: 'AWAY_TEAM',
+                                homeTeam: event.homeTeam.name,
+                                awayTeam: event.awayTeam.name,
+                                endDateEvent: event.lastUpdated,
+                                homeTeamOdd: event.odds.homeWin,
+                                awayTeamOdd: event.odds.awayWin,
+                                drawTeamOdd: event.odds.draw,
+                                homeTeamName: event.homeTeam.name,
+                                awayTeamName: event.awayTeam.name,
+                                homeTeamLogo: event.homeTeam.crest,
+                                awayTeamLogo: event.awayTeam.crest,
+                                eventDate: event.utcDate,
+                              });
+                            }
+                          }}
                         >
-                          {event.odds.awayWin}
+                          {event.odds.awayWin ?? 'X'}
                         </Button>
                       </TableCell>
                       <TableCell
