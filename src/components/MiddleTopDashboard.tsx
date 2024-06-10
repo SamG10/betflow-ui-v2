@@ -87,6 +87,8 @@ const MiddleTopDashboard: React.FC = () => {
     }
   };
 
+  console.log('rankingUsers', rankingUsers);
+
   return (
     <>
       <Stack direction="column">
@@ -232,7 +234,7 @@ const MiddleTopDashboard: React.FC = () => {
               padding="10px"
             >
               <Stack padding="10px">
-                {rankingUsers.length > 0 ? (
+                {rankingUsers?.length > 0 ? (
                   rankingUsers.map((users, index) => {
                     const indexColor = Object.values([1, 2, 3]).includes(
                       index + 1

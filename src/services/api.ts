@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8081/api/v1',
+  baseURL: `${import.meta.env.VITE_BETFLOW_API_URL}/api/v1`,
 });
 
 export default api;
