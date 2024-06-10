@@ -16,7 +16,7 @@ const Dashboard: React.FC = () => {
           display="flex"
           flexDirection="column"
           justifyContent="space-between"
-          sx={{ width: '80%', height: 'calc(100vh - 40px)' }}
+          sx={{ width: '80%', height: 'calc(100vh - 20px)' }}
         >
           <MiddleTopDashboard />
           <MiddleBottomDashboard />

@@ -18,7 +18,7 @@ import { Bet } from '../interfaces/bet.interface';
 import { Event } from '../interfaces/event.interface';
 
 const MiddleBottomDashboard: React.FC = () => {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const bets = useBetsStore((state) => state.bets);
 
   const { addBetToBets } = useBetsStore();
@@ -34,14 +34,10 @@ const MiddleBottomDashboard: React.FC = () => {
     fetchEvents();
   }, []);
 
-  const addEventsToBets = (bet) => {
-    console.log('bet', bet);
-    console.log('bets', bets);
-
+  const addEventsToBets = (bet: Bet) => {
     const existingBet = bets.find(
       (existingBet) => existingBet.eventId == bet.eventId
     );
-    console.log('existingBet', existingBet);
 
     if (!existingBet) {
       addBetToBets(bet);
@@ -50,13 +46,16 @@ const MiddleBottomDashboard: React.FC = () => {
 
   return (
     <>
-      <Stack className={styles.middleBottomDashboard} height="auto">
+      <Stack
+        className={styles.middleBottomDashboard}
+        height="calc(100vh - 330px)"
+      >
         <Stack direction="row">
           <TableContainer
             className={styles.tableContainer}
             component={Paper}
             sx={{
-              height: '410px',
+              height: 'calc(100vh - 340px)',
               width: '100%',
               borderRadius: '20px',
               overflowX: 'scroll',
@@ -134,8 +133,6 @@ const MiddleBottomDashboard: React.FC = () => {
                                 eventId: event.id,
                                 odd: event.odds.homeWin,
                                 team: 'HOME_TEAM',
-                                homeTeam: event.homeTeam.name,
-                                awayTeam: event.awayTeam.name,
                                 endDateEvent: event.lastUpdated,
                                 homeTeamOdd: event.odds.homeWin,
                                 awayTeamOdd: event.odds.awayWin,
@@ -169,8 +166,6 @@ const MiddleBottomDashboard: React.FC = () => {
                                 eventId: event.id,
                                 odd: event.odds.draw,
                                 team: 'DRAW',
-                                homeTeam: event.homeTeam.name,
-                                awayTeam: event.awayTeam.name,
                                 endDateEvent: event.lastUpdated,
                                 homeTeamOdd: event.odds.homeWin,
                                 awayTeamOdd: event.odds.awayWin,
@@ -204,8 +199,6 @@ const MiddleBottomDashboard: React.FC = () => {
                                 eventId: event.id,
                                 odd: event.odds.awayWin,
                                 team: 'AWAY_TEAM',
-                                homeTeam: event.homeTeam.name,
-                                awayTeam: event.awayTeam.name,
                                 endDateEvent: event.lastUpdated,
                                 homeTeamOdd: event.odds.homeWin,
                                 awayTeamOdd: event.odds.awayWin,

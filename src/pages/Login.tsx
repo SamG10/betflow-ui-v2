@@ -12,6 +12,7 @@ import { loginUser } from '../services/users.service';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAuth } from '../contexts/AuthContext';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email').min(1, 'Email is required'),
@@ -20,6 +21,7 @@ const loginSchema = z.object({
 type FormData = z.infer<typeof loginSchema>;
 
 const Login: React.FC = () => {
+  const { login, refreshUser } = useAuth();
   const navigate = useNavigate();
 
   const defaultValues = {
@@ -38,9 +40,13 @@ const Login: React.FC = () => {
   });
 
   const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
-    await loginUser(data);
-    reset();
-    navigate('/');
+    const token = await loginUser(data);
+    if (token) {
+      login(token);
+      refreshUser();
+      reset();
+      navigate('/');
+    }
   };
 
   return (

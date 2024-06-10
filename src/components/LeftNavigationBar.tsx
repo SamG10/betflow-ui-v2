@@ -1,149 +1,150 @@
-import { Avatar, Box, Button, Divider, Stack, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import {
+  Avatar,
+  Box,
+  Button,
+  Divider,
+  Drawer,
+  Hidden,
+  IconButton,
+  Stack,
+  Typography,
+} from '@mui/material';
+import React, { useState } from 'react';
 import styles from '../styles/LeftNavigationBar.module.css';
-import { getUserInfo, logoutUser } from '../services/users.service';
-import { useNavigate } from 'react-router-dom';
-import { useTheme } from '@emotion/react';
+import { useTheme, Theme } from '@mui/material/styles';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
+import { useAuth } from '../contexts/AuthContext';
 
 const LeftNavigationBar: React.FC = () => {
-  const theme = useTheme();
-  const navigate = useNavigate();
+  const theme: Theme = useTheme();
+  const { isAuthenticated, user, logout } = useAuth();
 
-  const [user, setUser] = useState();
-  const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-  useEffect(() => {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      setAccessToken(token);
-    }
-    const fetchUserInfo = async () => {
-      try {
-        const user = await getUserInfo();
-        setUser(user);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchUserInfo();
-  }, []);
-
-  const logout = () => {
-    logoutUser();
-    setAccessToken(undefined);
-    navigate('/');
+  const toggleDrawer = (open: boolean) => () => {
+    setDrawerOpen(open);
   };
-  return (
-    <>
-      <Box className={styles.left_sidebar}>
-        <Stack>
-          <img src="src\assets\Betflow-Logo.svg" alt="betflow-logo" />
-        </Stack>
-        {user && accessToken ? (
-          <Stack direction="column" spacing={2}>
-            <Stack direction="row">
-              <Typography variant="h6" gutterBottom>
-                Profile
+
+  const sidebarContent = (
+    <Box className={styles.left_sidebar}>
+      <Stack>
+        <img src="src/assets/Betflow-Logo.svg" alt="betflow-logo" />
+      </Stack>
+      {isAuthenticated && user ? (
+        <Stack direction="column" spacing={2}>
+          <Stack direction="row">
+            <Typography variant="h6" gutterBottom>
+              Profile
+            </Typography>
+          </Stack>
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Avatar
+              alt="Avatar"
+              src={user.avatar}
+              sx={{ width: 78, height: 78 }}
+            />
+            <Stack direction="column">
+              <Typography variant="h5" fontWeight="bold">
+                {user.firstname}
               </Typography>
-            </Stack>
-            <Stack direction="row" spacing={2} alignItems="center">
-              <Avatar
-                alt="Avatar"
-                src={user.avatar}
-                sx={{ width: 78, height: 78 }}
-              />
-              <Stack direction="column">
-                <Typography variant="h5" fontWeight="bold">
-                  {user.firstname}
+              <Stack direction="row" spacing={1}>
+                <Typography
+                  variant="h6"
+                  fontWeight="bold"
+                  color={theme.palette.primary.main}
+                >
+                  {user.coins?.toFixed(2)}
                 </Typography>
-                <Stack direction="row" spacing={1}>
-                  <Typography
-                    variant="h6"
-                    fontWeight="bold"
-                    color={theme.palette.primary.main}
-                  >
-                    {user.coins?.toFixed(2)}
-                  </Typography>
-                  <img
-                    src="src\assets\betflow.svg"
-                    alt="betflow logo"
-                    width="32px"
-                  />
-                </Stack>
+                <img
+                  src="src/assets/betflow.svg"
+                  alt="betflow logo"
+                  width="32px"
+                />
               </Stack>
             </Stack>
-            <Stack direction="row"></Stack>
-            <Divider color="#FFFFFF" />
           </Stack>
-        ) : (
-          <Stack>
-            <Typography variant="h6" gutterBottom>
-              Account
-            </Typography>
-            <Button href="/register" variant="outlined">
-              Login / Register
-            </Button>
-          </Stack>
-        )}
+          <Stack direction="row"></Stack>
+          <Divider color="#FFFFFF" />
+        </Stack>
+      ) : (
         <Stack>
           <Typography variant="h6" gutterBottom>
-            Navigation
+            Account
           </Typography>
-          <Stack spacing={1}>
-            <Button
-              href="/"
-              variant={location.pathname === '/' ? 'contained' : 'outlined'}
-              startIcon={
-                <img
-                  src="src\assets\dashboard-logo.png"
-                  alt="dashboard-logo"
-                  style={{ marginRight: '10px' }}
-                />
-              }
-            >
-              Dashboard
-            </Button>
-            <Button
-              href="/myBets"
-              variant={
-                location.pathname === '/myBets' ? 'contained' : 'outlined'
-              }
-              startIcon={
-                <img
-                  src="src\assets\my-bets-logo.png"
-                  alt="dashboard-logo"
-                  style={{ marginRight: '32px' }}
-                />
-              }
-            >
-              My Bets
-            </Button>
-            <Button
-              href="liveEvents"
-              variant={
-                location.pathname === '/liveEvents' ? 'contained' : 'outlined'
-              }
-              startIcon={
-                <img
-                  src="src\assets\live-logo.png"
-                  alt="dashboard-logo"
-                  style={{ marginRight: '10px' }}
-                />
-              }
-            >
-              Live Events
-            </Button>
-          </Stack>
+          <Button href="/register" variant="outlined">
+            Login / Register
+          </Button>
         </Stack>
-        <Button color="inherit" onClick={logout}>
-          <img
-            src="src\assets\logout-logo.svg"
-            alt="logout"
-            style={{ width: '24px' }}
-          />
-        </Button>
-      </Box>
+      )}
+      <Stack>
+        <Typography variant="h6" gutterBottom>
+          Navigation
+        </Typography>
+        <Stack spacing={1}>
+          <Button
+            href="/"
+            variant={location.pathname === '/' ? 'contained' : 'outlined'}
+            startIcon={
+              <img
+                src="src/assets/dashboard-logo.png"
+                alt="dashboard-logo"
+                style={{ marginRight: '10px' }}
+              />
+            }
+          >
+            Dashboard
+          </Button>
+          <Button
+            href="/myBets"
+            variant={location.pathname === '/myBets' ? 'contained' : 'outlined'}
+            startIcon={
+              <img
+                src="src/assets/my-bets-logo.png"
+                alt="dashboard-logo"
+                style={{ marginRight: '32px' }}
+              />
+            }
+          >
+            My Bets
+          </Button>
+          <Button
+            href="liveEvents"
+            variant={
+              location.pathname === '/liveEvents' ? 'contained' : 'outlined'
+            }
+            startIcon={
+              <img
+                src="src/assets/live-logo.png"
+                alt="dashboard-logo"
+                style={{ marginRight: '10px' }}
+              />
+            }
+          >
+            Live Events
+          </Button>
+        </Stack>
+      </Stack>
+      <Button color="inherit" onClick={logout}>
+        <img
+          src="src/assets/logout-logo.svg"
+          alt="logout"
+          style={{ width: '24px' }}
+        />
+      </Button>
+    </Box>
+  );
+
+  return (
+    <>
+      <Hidden lgDown>{sidebarContent}</Hidden>
+      <Hidden lgUp>
+        <IconButton onClick={toggleDrawer(true)}>
+          <KeyboardDoubleArrowRightIcon sx={{ color: '#4F5051' }} />
+        </IconButton>
+        <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
+          {sidebarContent}
+        </Drawer>
+      </Hidden>
     </>
   );
 };
