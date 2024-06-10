@@ -1,16 +1,6 @@
-
-.displayBets {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    max-height: 400px;
-    overflow: scroll;
-}
-
 .displayBets::-webkit-scrollbar {display: none;}
 
 .gradient_promo {
     background: rgb(0,89,224);
-background: linear-gradient(150deg, rgba(0,89,224,1) 0%, rgba(0,12,26,0.3) 100%);
+    background: linear-gradient(150deg, rgba(0,89,224,1) 0%, rgba(0,12,26,0.3) 100%);
 }

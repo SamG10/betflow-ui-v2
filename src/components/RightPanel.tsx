@@ -71,15 +71,15 @@ const RightPanel: React.FC = () => {
       <Stack
         display="flex"
         flexDirection="column"
-        width="20%"
         justifyContent="space-between"
+        height="calc(100vh - 20px)"
       >
         <Stack
           bgcolor={theme.palette.background.paper}
           className={styles.gradient_promo}
           borderRadius="20px"
           display="flex"
-          justifyContent="space-around"
+          justifyContent="space-between"
           padding="20px"
           height="30%"
         >
@@ -101,7 +101,7 @@ const RightPanel: React.FC = () => {
           height="calc(100% - 38%)"
         >
           <Typography variant="h6">{bets.length} bets selected</Typography>
-          <div className={styles.displayBets}>
+          <Stack className={styles.displayBets}>
             {bets?.map((bet) => (
               <Stack
                 key={bet.eventId}
@@ -140,7 +140,7 @@ const RightPanel: React.FC = () => {
                 </Stack>
               </Stack>
             ))}
-          </div>
+          </Stack>
           <Stack bgcolor="#1C1C24" zIndex={1000}>
             <Button variant="contained" onClick={() => handleBetsToSave()}>
               Save bets

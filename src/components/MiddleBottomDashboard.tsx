@@ -61,7 +61,7 @@ const MiddleBottomDashboard: React.FC = () => {
               overflowX: 'scroll',
             }}
           >
-            <Table aria-label="simple table" stickyHeader>
+            <Table stickyHeader>
               <TableHead>
                 <TableRow>
                   <TableCell align="center" sx={{ borderBottom: 'none' }}>
