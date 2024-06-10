@@ -72,8 +72,6 @@ const MiddleTopDashboard: React.FC = () => {
     getLigue1Standing();
   }, []);
 
-  console.log(standing);
-
   const formColorBackground = (form: string) => {
     switch (form) {
       case 'W':
@@ -86,8 +84,6 @@ const MiddleTopDashboard: React.FC = () => {
         return 'gray';
     }
   };
-
-  console.log('rankingUsers', rankingUsers);
 
   return (
     <>

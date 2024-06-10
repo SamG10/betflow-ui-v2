@@ -2,27 +2,26 @@ import React from 'react';
 import MiddleTopDashboard from '../components/MiddleTopDashboard';
 import MiddleBottomDashboard from '../components/MiddleBottomDashboard';
 import RightPanel from '../components/RightPanel';
-import { Stack } from '@mui/material';
+import { Grid } from '@mui/material';
 
 const Dashboard: React.FC = () => {
   return (
     <>
-      <Stack
-        direction="row"
+      <Grid
+        container
         spacing={1}
-        sx={{ maxHeight: 'calc(100vh - 20px)' }}
+        sx={{ maxHeight: 'calc(100vh - 20px)', overflowY: 'auto' }}
       >
-        <Stack
-          display="flex"
-          flexDirection="column"
-          justifyContent="space-between"
-          sx={{ width: '80%', height: 'calc(100vh - 20px)' }}
-        >
-          <MiddleTopDashboard />
+        <Grid item xs={12} md={9}>
+          <div style={{ marginBottom: '16px' }}>
+            <MiddleTopDashboard />
+          </div>
           <MiddleBottomDashboard />
-        </Stack>
-        <RightPanel />
-      </Stack>
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <RightPanel />
+        </Grid>
+      </Grid>
     </>
   );
 };
