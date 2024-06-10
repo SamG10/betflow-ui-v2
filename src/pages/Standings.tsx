@@ -36,7 +36,7 @@ export interface Standing {
   table: StandingTable[];
 }
 
-const Calendar: React.FC = () => {
+const Standings: React.FC = () => {
   const [standing, setStanding] = useState<Standing[]>([]);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -162,4 +162,4 @@ const Calendar: React.FC = () => {
   );
 };
 
-export default Calendar;
+export default Standings;

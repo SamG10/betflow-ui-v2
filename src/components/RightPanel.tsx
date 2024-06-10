@@ -72,7 +72,7 @@ const RightPanel: React.FC = () => {
         display="flex"
         flexDirection="column"
         justifyContent="space-between"
-        height="calc(100vh - 20px)"
+        height="calc(100vh - 3%)"
       >
         <Stack
           bgcolor={theme.palette.background.paper}
@@ -81,6 +81,7 @@ const RightPanel: React.FC = () => {
           display="flex"
           justifyContent="space-between"
           padding="20px"
+          marginBottom={1.5}
           height="30%"
         >
           <img src="src\assets\fire.svg" alt="fire" width="45px" />
@@ -93,15 +94,19 @@ const RightPanel: React.FC = () => {
 
         <Stack
           flexDirection="column"
-          padding="10px"
+          padding={1}
           spacing={1}
           justifyContent="space-between"
           bgcolor={theme.palette.background.paper}
           borderRadius="20px"
-          height="calc(100% - 38%)"
+          height="calc(100vh - 30%)"
         >
           <Typography variant="h6">{bets.length} bets selected</Typography>
-          <Stack className={styles.displayBets}>
+          <Stack
+            className={styles.displayBets}
+            overflow={'scroll'}
+            height="calc(100vh - 400px)"
+          >
             {bets?.map((bet) => (
               <Stack
                 key={bet.eventId}
