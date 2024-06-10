@@ -21,8 +21,7 @@ const RightPanel: React.FC = () => {
   const [stakes, setStakes] = useState<{ [key: string]: number }>({});
 
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleStakeChange = (betId: number, value: number) => {
     setStakes((prevStakes) => {
@@ -44,23 +43,24 @@ const RightPanel: React.FC = () => {
     });
 
     try {
-      // TODO: Pourquoi je ne passe jamais dans le catch ici
       await fetchSaveBets(betsToSave);
       deleteAllBets();
-    } catch (error) {
+    } catch (error: unknown) {
       setOpen(true);
-      setError(error.message);
-    } finally {
-      setLoading(false);
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError(String(error));
+      }
     }
   };
 
   const computeTeamToDisplay = (bet: Bet) => {
     switch (bet?.team) {
       case 'HOME_TEAM':
-        return bet.homeTeam;
+        return bet.homeTeamName;
       case 'AWAY_TEAM':
-        return bet.awayTeam;
+        return bet.awayTeamName;
       case 'DRAW':
         return 'Draw';
     }
@@ -90,10 +90,12 @@ const RightPanel: React.FC = () => {
             one-time use!
           </Typography>
         </Stack>
+
         <Stack
           flexDirection="column"
           padding="10px"
           spacing={1}
+          justifyContent="space-between"
           bgcolor={theme.palette.background.paper}
           borderRadius="20px"
           height="calc(100% - 38%)"
@@ -112,7 +114,7 @@ const RightPanel: React.FC = () => {
               >
                 <Stack flexDirection="row" justifyContent="space-between">
                   <Typography variant="caption">
-                    {bet.homeTeam} - {bet.awayTeam}
+                    {bet.homeTeamName} - {bet.awayTeamName}
                   </Typography>
                   <CloseIcon onClick={() => deleteBetFromBets(bet)} />
                 </Stack>

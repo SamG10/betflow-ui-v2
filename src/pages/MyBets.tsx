@@ -13,8 +13,32 @@ import {
   Typography,
 } from '@mui/material';
 
+interface Bet {
+  _id: string;
+  eventDate: string;
+  homeTeamName: string;
+  homeTeamLogo: string;
+  homeTeamOdd: number;
+  drawTeamOdd: number;
+  awayTeamOdd: number;
+  awayTeamName: string;
+  awayTeamLogo: string;
+  scoreHome: number;
+  scoreAway: number;
+  odd: number;
+  status: string;
+  betResult?: string;
+  stake: number;
+  payed: boolean;
+  coinsGain: number;
+}
+
+interface UserInfo {
+  bets: Bet[];
+}
+
 const MyBets: React.FC = () => {
-  const [userInfo, setUserInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -65,6 +89,9 @@ const MyBets: React.FC = () => {
                   Status
                 </TableCell>
                 <TableCell align="center" sx={{ borderBottom: 'none' }}>
+                  Score
+                </TableCell>
+                <TableCell align="center" sx={{ borderBottom: 'none' }}>
                   Win / Loss
                 </TableCell>
                 <TableCell align="center" sx={{ borderBottom: 'none' }}>
@@ -83,7 +110,8 @@ const MyBets: React.FC = () => {
                     scope="row"
                     sx={{ borderBottom: 'none' }}
                   >
-                    {bet.eventDate.split('T')[0]}
+                    {bet.eventDate.split('T')[0]} -
+                    {bet.eventDate.split('T')[1].substring(0, 8)}
                   </TableCell>
                   <TableCell
                     align="center"
@@ -96,7 +124,7 @@ const MyBets: React.FC = () => {
                   >
                     <Typography
                       variant="caption"
-                      sx={{ marginRight: '10px', width: '150px' }}
+                      sx={{ marginRight: '10px', width: '100px' }}
                     >
                       {bet.homeTeamName}
                     </Typography>
@@ -144,7 +172,7 @@ const MyBets: React.FC = () => {
                   >
                     <Typography
                       variant="caption"
-                      sx={{ marginRight: '10px', width: '150px' }}
+                      sx={{ marginRight: '10px', width: '100px' }}
                     >
                       {bet.awayTeamName}
                     </Typography>
@@ -155,18 +183,23 @@ const MyBets: React.FC = () => {
                     />
                   </TableCell>
                   <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                    <Typography variant="body">{bet.status}</Typography>
+                    <Typography variant="body1">{bet.status}</Typography>
                   </TableCell>
                   <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                    <Typography variant="body">
+                    <Typography variant="body1">
+                      {bet?.scoreHome} - {bet?.scoreAway}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center" sx={{ borderBottom: 'none' }}>
+                    <Typography variant="body1">
                       {bet?.betResult ?? 'None result for this moment'}
                     </Typography>
                   </TableCell>
                   <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                    <Typography variant="body">{bet?.stake}</Typography>
+                    <Typography variant="body1">{bet?.stake}</Typography>
                   </TableCell>
                   <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                    <Typography variant="body">
+                    <Typography variant="body1">
                       {bet?.payed ? bet?.coinsGain : 'Bet in progress'}
                     </Typography>
                   </TableCell>
