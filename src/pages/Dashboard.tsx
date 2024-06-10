@@ -13,7 +13,7 @@ const Dashboard: React.FC = () => {
         sx={{ maxHeight: 'calc(100vh - 20px)', overflowY: 'auto' }}
       >
         <Grid item xs={12} md={9}>
-          <div style={{ marginBottom: '16px' }}>
+          <div style={{ marginBottom: '15px' }}>
             <MiddleTopDashboard />
           </div>
           <MiddleBottomDashboard />

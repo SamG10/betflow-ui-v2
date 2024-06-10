@@ -87,11 +87,7 @@ const LeftNavigationBar: React.FC = () => {
               href="/"
               variant={location.pathname === '/' ? 'contained' : 'outlined'}
               startIcon={
-                <img
-                  src="src/assets/dashboard-logo.png"
-                  alt="dashboard-logo"
-                  style={{ marginRight: '10px' }}
-                />
+                <img src="src/assets/dashboard-logo.png" alt="dashboard-logo" />
               }
             >
               Dashboard
@@ -102,11 +98,7 @@ const LeftNavigationBar: React.FC = () => {
                 location.pathname === '/myBets' ? 'contained' : 'outlined'
               }
               startIcon={
-                <img
-                  src="src/assets/my-bets-logo.png"
-                  alt="dashboard-logo"
-                  style={{ marginRight: '32px' }}
-                />
+                <img src="src/assets/my-bets-logo.png" alt="my-bets-logo" />
               }
             >
               My Bets
@@ -116,30 +108,34 @@ const LeftNavigationBar: React.FC = () => {
               variant={
                 location.pathname === '/liveEvents' ? 'contained' : 'outlined'
               }
-              startIcon={
-                <img
-                  src="src/assets/live-logo.png"
-                  alt="dashboard-logo"
-                  style={{ marginRight: '10px' }}
-                />
-              }
+              startIcon={<img src="src/assets/live-logo.png" alt="live-logo" />}
             >
               Live Events
             </Button>
             <Button
-              href="/calendar"
+              href="/standings"
               variant={
-                location.pathname === '/calendar' ? 'contained' : 'outlined'
+                location.pathname === '/standings' ? 'contained' : 'outlined'
+              }
+              startIcon={
+                <img src="src/assets/standings.png" alt="standings-logo" />
+              }
+            >
+              Standings
+            </Button>
+            <Button
+              href="/rankingUsers"
+              variant={
+                location.pathname === '/rankingUsers' ? 'contained' : 'outlined'
               }
               startIcon={
                 <img
-                  src="src/assets/calendar.png"
-                  alt="dashboard-logo"
-                  style={{ marginRight: '32px' }}
+                  src="src/assets/ranking-users.png"
+                  alt="ranking-users-logo"
                 />
               }
             >
-              Calendar
+              Ranking Users
             </Button>
           </Stack>
         </Stack>

@@ -229,14 +229,14 @@ const MiddleTopDashboard: React.FC = () => {
               display="flex"
               padding="10px"
             >
-              <Stack padding="10px">
+              <Stack className={style.hideScrollBar} overflow="scroll">
                 {rankingUsers?.length > 0 ? (
                   rankingUsers.map((users, index) => {
                     const indexColor = Object.values([1, 2, 3]).includes(
                       index + 1
                     )
-                      ? '#F5DD61'
-                      : 'white';
+                      ? '#00A0F7'
+                      : '#77777';
                     return (
                       <Stack
                         direction="row"
@@ -244,14 +244,24 @@ const MiddleTopDashboard: React.FC = () => {
                         display="flex"
                         alignItems="center"
                         key={index}
+                        padding={1}
+                        margin={0.5}
+                        borderRadius={2}
                       >
-                        <Typography variant="h6" fontWeight="bold">
-                          {index + 1}
-                        </Typography>
-                        <Avatar sx={{ width: 50, height: 50 }} />
+                        <Stack>
+                          <Typography
+                            variant="h6"
+                            width="25px"
+                            fontWeight="bold"
+                            color={indexColor}
+                          >
+                            {index + 1}
+                          </Typography>
+                        </Stack>
+                        <Avatar sx={{ width: 30, height: 30 }} />
                         <Typography
                           variant="body1"
-                          color={indexColor}
+                          color="white"
                           fontWeight="bold"
                         >
                           {users.coins}

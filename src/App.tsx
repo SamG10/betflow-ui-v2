@@ -9,7 +9,8 @@ import Layout from './layouts/Layout';
 import styles from './styles/App.module.css';
 import Register from './pages/Register';
 import Login from './pages/Login';
-import Calendar from './pages/Calendar';
+import RankingUsers from './pages/RankingUsers';
+import Standings from './pages/Standings';
 
 function App() {
   return (
@@ -25,7 +26,8 @@ function App() {
                   <Route path="/myBets" element={<MyBets />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/login" element={<Login />} />
-                  <Route path="/calendar" element={<Calendar />} />
+                  <Route path="/standings" element={<Standings />} />
+                  <Route path="/rankingUsers" element={<RankingUsers />} />
                 </Routes>
               </div>
             </Layout>
