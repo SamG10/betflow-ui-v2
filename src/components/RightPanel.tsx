@@ -1,9 +1,11 @@
 import {
   Button,
+  Hidden,
   Snackbar,
   Stack,
   TextField,
   Typography,
+  useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { useBetsStore } from '../stores/betStore';
@@ -15,6 +17,7 @@ import { fetchSaveBets } from '../services/bets.service';
 
 const RightPanel: React.FC = () => {
   const theme = useTheme();
+  const isMdScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   const { bets, deleteBetFromBets, deleteAllBets } = useBetsStore();
 
@@ -72,25 +75,28 @@ const RightPanel: React.FC = () => {
         display="flex"
         flexDirection="column"
         justifyContent="space-between"
-        height="calc(100vh - 3%)"
       >
-        <Stack
-          bgcolor={theme.palette.background.paper}
-          className={styles.gradient_promo}
-          borderRadius="20px"
-          display="flex"
-          justifyContent="space-between"
-          padding="20px"
-          marginBottom={1.5}
-          height="30%"
-        >
-          <img src="src\assets\fire.svg" alt="fire" width="45px" />
-          <Typography variant="h5">Double your winnings today only!</Typography>
-          <Typography variant="caption">
-            Pick your bet, double your rewards with Betflow, available for
-            one-time use!
-          </Typography>
-        </Stack>
+        <Hidden lgDown>
+          <Stack
+            bgcolor={theme.palette.background.paper}
+            className={styles.gradient_promo}
+            borderRadius="20px"
+            display="flex"
+            justifyContent="space-between"
+            padding="20px"
+            marginBottom={1.5}
+            height="30%"
+          >
+            <img src="src\assets\fire.svg" alt="fire" width="45px" />
+            <Typography variant="h5">
+              Double your winnings today only!
+            </Typography>
+            <Typography variant="caption">
+              Pick your bet, double your rewards with Betflow, available for
+              one-time use!
+            </Typography>
+          </Stack>
+        </Hidden>
 
         <Stack
           flexDirection="column"
@@ -99,13 +105,13 @@ const RightPanel: React.FC = () => {
           justifyContent="space-between"
           bgcolor={theme.palette.background.paper}
           borderRadius="20px"
-          height="calc(100vh - 30%)"
+          height={isMdScreen ? 'calc(100vh - 30%)' : 'calc(100vh - 40px)'}
         >
           <Typography variant="h6">{bets.length} bets selected</Typography>
           <Stack
             className={styles.displayBets}
             overflow={'scroll'}
-            height="calc(100vh - 400px)"
+            height={isMdScreen ? 'calc(100vh - 400px)' : 'calc(100vh - 40px)'}
           >
             {bets?.map((bet) => (
               <Stack

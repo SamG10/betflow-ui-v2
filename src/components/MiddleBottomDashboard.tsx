@@ -9,6 +9,8 @@ import {
   TableHead,
   TableRow,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import styles from '../styles/MiddleBottomDashboard.module.css';
@@ -20,6 +22,10 @@ import { Event } from '../interfaces/event.interface';
 const MiddleBottomDashboard: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const bets = useBetsStore((state) => state.bets);
+  const theme = useTheme();
+  const isLgScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  const isMdScreen = useMediaQuery(theme.breakpoints.up('md'));
+  const isSmScreen = useMediaQuery(theme.breakpoints.up('sm'));
 
   const { addBetToBets } = useBetsStore();
 
@@ -48,14 +54,18 @@ const MiddleBottomDashboard: React.FC = () => {
     <>
       <Stack
         className={styles.middleBottomDashboard}
-        height="calc(100vh - 330px)"
+        sx={{
+          height: !isMdScreen ? 'calc(100vh - 330px)' : 'calc(100vh - 40px)',
+        }}
       >
         <Stack direction="row">
           <TableContainer
             className={styles.tableContainer}
             component={Paper}
             sx={{
-              height: 'calc(100vh - 340px)',
+              height: !isMdScreen
+                ? 'calc(100vh - 340px)'
+                : 'calc(100vh - 40px)',
               width: '100%',
               borderRadius: '20px',
               overflowX: 'scroll',
@@ -64,21 +74,31 @@ const MiddleBottomDashboard: React.FC = () => {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                    Schedule
-                  </TableCell>
+                  {isMdScreen && (
+                    <TableCell align="center" sx={{ borderBottom: 'none' }}>
+                      Schedule
+                    </TableCell>
+                  )}
+
                   <TableCell align="center" sx={{ borderBottom: 'none' }}>
                     Home
                   </TableCell>
-                  <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                    1
-                  </TableCell>
+                  {isSmScreen && (
+                    <TableCell align="center" sx={{ borderBottom: 'none' }}>
+                      1
+                    </TableCell>
+                  )}
+
                   <TableCell align="center" sx={{ borderBottom: 'none' }}>
                     X
                   </TableCell>
-                  <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                    2
-                  </TableCell>
+
+                  {isSmScreen && (
+                    <TableCell align="center" sx={{ borderBottom: 'none' }}>
+                      2
+                    </TableCell>
+                  )}
+
                   <TableCell align="center" sx={{ borderBottom: 'none' }}>
                     Away
                   </TableCell>
@@ -88,13 +108,15 @@ const MiddleBottomDashboard: React.FC = () => {
                 {events.length > 0 &&
                   events?.map((event: Event) => (
                     <TableRow key={event.id}>
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        sx={{ borderBottom: 'none' }}
-                      >
-                        {event.utcDate.split('T')[0]}
-                      </TableCell>
+                      {isMdScreen && (
+                        <TableCell
+                          component="th"
+                          scope="row"
+                          sx={{ borderBottom: 'none' }}
+                        >
+                          {event.utcDate.split('T')[0]}
+                        </TableCell>
+                      )}
                       <TableCell
                         align="center"
                         sx={{
@@ -102,53 +124,94 @@ const MiddleBottomDashboard: React.FC = () => {
                           justifyContent: 'center',
                           alignItems: 'center',
                           borderBottom: 'none',
+                          flexDirection: !isSmScreen ? 'column' : 'row',
                         }}
                       >
-                        <Typography
-                          variant="caption"
-                          sx={{ marginRight: '10px', width: '150px' }}
-                        >
-                          {event.homeTeam.name}
-                        </Typography>
+                        {isLgScreen && (
+                          <Typography
+                            variant="caption"
+                            sx={{ marginRight: '10px', width: '150px' }}
+                          >
+                            {isLgScreen
+                              ? event.homeTeam.name
+                              : event.homeTeam.tla}{' '}
+                          </Typography>
+                        )}
                         <img
                           src={event.homeTeam.crest}
                           alt="home_team_logo"
                           width="50px"
+                          style={{ marginBottom: !isSmScreen ? '5px' : '0' }}
                         />
-                      </TableCell>
-                      <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                        <Button
-                          variant={
-                            bets[
-                              bets.findIndex(
-                                (bet: Bet) => bet.eventId === event.id
-                              )
-                            ]?.team === 'HOME_TEAM'
-                              ? 'contained'
-                              : 'outlined'
-                          }
-                          onClick={() => {
-                            if (event.odds.homeWin) {
-                              addEventsToBets({
-                                eventId: event.id,
-                                odd: event.odds.homeWin,
-                                team: 'HOME_TEAM',
-                                endDateEvent: event.lastUpdated,
-                                homeTeamOdd: event.odds.homeWin,
-                                awayTeamOdd: event.odds.awayWin,
-                                drawTeamOdd: event.odds.draw,
-                                homeTeamName: event.homeTeam.name,
-                                awayTeamName: event.awayTeam.name,
-                                homeTeamLogo: event.homeTeam.crest,
-                                awayTeamLogo: event.awayTeam.crest,
-                                eventDate: event.utcDate,
-                              });
+                        {!isSmScreen && (
+                          <Button
+                            variant={
+                              bets[
+                                bets.findIndex(
+                                  (bet: Bet) => bet.eventId === event.id
+                                )
+                              ]?.team === 'HOME_TEAM'
+                                ? 'contained'
+                                : 'outlined'
                             }
-                          }}
-                        >
-                          {event.odds.homeWin ?? 'X'}
-                        </Button>
+                            onClick={() => {
+                              if (event.odds.homeWin) {
+                                addEventsToBets({
+                                  eventId: event.id,
+                                  odd: event.odds.homeWin,
+                                  team: 'HOME_TEAM',
+                                  endDateEvent: event.lastUpdated,
+                                  homeTeamOdd: event.odds.homeWin,
+                                  awayTeamOdd: event.odds.awayWin,
+                                  drawTeamOdd: event.odds.draw,
+                                  homeTeamName: event.homeTeam.name,
+                                  awayTeamName: event.awayTeam.name,
+                                  homeTeamLogo: event.homeTeam.crest,
+                                  awayTeamLogo: event.awayTeam.crest,
+                                  eventDate: event.utcDate,
+                                });
+                              }
+                            }}
+                          >
+                            {event.odds.homeWin ?? 'X'}
+                          </Button>
+                        )}
                       </TableCell>
+                      {isSmScreen && (
+                        <TableCell align="center" sx={{ borderBottom: 'none' }}>
+                          <Button
+                            variant={
+                              bets[
+                                bets.findIndex(
+                                  (bet: Bet) => bet.eventId === event.id
+                                )
+                              ]?.team === 'HOME_TEAM'
+                                ? 'contained'
+                                : 'outlined'
+                            }
+                            onClick={() => {
+                              if (event.odds.homeWin) {
+                                addEventsToBets({
+                                  eventId: event.id,
+                                  odd: event.odds.homeWin,
+                                  team: 'HOME_TEAM',
+                                  endDateEvent: event.lastUpdated,
+                                  homeTeamOdd: event.odds.homeWin,
+                                  awayTeamOdd: event.odds.awayWin,
+                                  drawTeamOdd: event.odds.draw,
+                                  homeTeamName: event.homeTeam.name,
+                                  awayTeamName: event.awayTeam.name,
+                                  homeTeamLogo: event.homeTeam.crest,
+                                  awayTeamLogo: event.awayTeam.crest,
+                                  eventDate: event.utcDate,
+                                });
+                              }
+                            }}
+                          >
+                            {event.odds.homeWin ?? 'X'}
+                          </Button>
+                        </TableCell>
+                      )}
                       <TableCell align="center" sx={{ borderBottom: 'none' }}>
                         <Button
                           variant={
@@ -182,39 +245,42 @@ const MiddleBottomDashboard: React.FC = () => {
                           {event.odds.draw ?? 'X'}
                         </Button>
                       </TableCell>
-                      <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                        <Button
-                          variant={
-                            bets[
-                              bets.findIndex(
-                                (bet: Bet) => bet.eventId === event.id
-                              )
-                            ]?.team === 'AWAY_TEAM'
-                              ? 'contained'
-                              : 'outlined'
-                          }
-                          onClick={() => {
-                            if (event.odds.homeWin) {
-                              addEventsToBets({
-                                eventId: event.id,
-                                odd: event.odds.awayWin,
-                                team: 'AWAY_TEAM',
-                                endDateEvent: event.lastUpdated,
-                                homeTeamOdd: event.odds.homeWin,
-                                awayTeamOdd: event.odds.awayWin,
-                                drawTeamOdd: event.odds.draw,
-                                homeTeamName: event.homeTeam.name,
-                                awayTeamName: event.awayTeam.name,
-                                homeTeamLogo: event.homeTeam.crest,
-                                awayTeamLogo: event.awayTeam.crest,
-                                eventDate: event.utcDate,
-                              });
+
+                      {isSmScreen && (
+                        <TableCell align="center" sx={{ borderBottom: 'none' }}>
+                          <Button
+                            variant={
+                              bets[
+                                bets.findIndex(
+                                  (bet: Bet) => bet.eventId === event.id
+                                )
+                              ]?.team === 'AWAY_TEAM'
+                                ? 'contained'
+                                : 'outlined'
                             }
-                          }}
-                        >
-                          {event.odds.awayWin ?? 'X'}
-                        </Button>
-                      </TableCell>
+                            onClick={() => {
+                              if (event.odds.homeWin) {
+                                addEventsToBets({
+                                  eventId: event.id,
+                                  odd: event.odds.awayWin,
+                                  team: 'AWAY_TEAM',
+                                  endDateEvent: event.lastUpdated,
+                                  homeTeamOdd: event.odds.homeWin,
+                                  awayTeamOdd: event.odds.awayWin,
+                                  drawTeamOdd: event.odds.draw,
+                                  homeTeamName: event.homeTeam.name,
+                                  awayTeamName: event.awayTeam.name,
+                                  homeTeamLogo: event.homeTeam.crest,
+                                  awayTeamLogo: event.awayTeam.crest,
+                                  eventDate: event.utcDate,
+                                });
+                              }
+                            }}
+                          >
+                            {event.odds.awayWin ?? 'X'}
+                          </Button>
+                        </TableCell>
+                      )}
                       <TableCell
                         align="center"
                         sx={{
@@ -222,19 +288,58 @@ const MiddleBottomDashboard: React.FC = () => {
                           alignItems: 'center',
                           justifyContent: 'center',
                           borderBottom: 'none',
+                          flexDirection: !isSmScreen ? 'column' : 'row',
                         }}
                       >
-                        <Typography
-                          variant="caption"
-                          sx={{ marginRight: '10px', width: '150px' }}
-                        >
-                          {event.awayTeam.name}
-                        </Typography>
+                        {isLgScreen && (
+                          <Typography
+                            variant="caption"
+                            sx={{ marginRight: '10px', width: '150px' }}
+                          >
+                            {isLgScreen
+                              ? event.awayTeam.name
+                              : event.awayTeam.tla}{' '}
+                          </Typography>
+                        )}
                         <img
                           src={event.awayTeam.crest}
                           alt="home_team_logo"
                           width="50px"
+                          style={{ marginBottom: !isSmScreen ? '5px' : '0' }}
                         />
+                        {!isSmScreen && (
+                          <Button
+                            variant={
+                              bets[
+                                bets.findIndex(
+                                  (bet: Bet) => bet.eventId === event.id
+                                )
+                              ]?.team === 'AWAY_TEAM'
+                                ? 'contained'
+                                : 'outlined'
+                            }
+                            onClick={() => {
+                              if (event.odds.homeWin) {
+                                addEventsToBets({
+                                  eventId: event.id,
+                                  odd: event.odds.homeWin,
+                                  team: 'AWAY_TEAM',
+                                  endDateEvent: event.lastUpdated,
+                                  homeTeamOdd: event.odds.homeWin,
+                                  awayTeamOdd: event.odds.awayWin,
+                                  drawTeamOdd: event.odds.draw,
+                                  homeTeamName: event.homeTeam.name,
+                                  awayTeamName: event.awayTeam.name,
+                                  homeTeamLogo: event.homeTeam.crest,
+                                  awayTeamLogo: event.awayTeam.crest,
+                                  eventDate: event.utcDate,
+                                });
+                              }
+                            }}
+                          >
+                            {event.odds.homeWin ?? 'X'}
+                          </Button>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}

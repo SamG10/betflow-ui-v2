@@ -5,6 +5,9 @@ import {
   Stack,
   TextField,
   Typography,
+  Link,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -21,6 +24,10 @@ const loginSchema = z.object({
 type FormData = z.infer<typeof loginSchema>;
 
 const Login: React.FC = () => {
+  const theme = useTheme();
+  const isLgScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  const isSmScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
   const { login, refreshUser } = useAuth();
   const navigate = useNavigate();
 
@@ -52,7 +59,7 @@ const Login: React.FC = () => {
   return (
     <>
       <Stack
-        width="calc(100vw - 250px)"
+        width={isLgScreen ? 'calc(100vw - 250px)' : '100vw'}
         height="100vh"
         display="flex"
         justifyContent="center"
@@ -67,9 +74,9 @@ const Login: React.FC = () => {
           padding="10px"
           bgcolor="#1C1C24"
           borderRadius="20px"
-          width="250px"
+          width={{ xs: '300px', sm: '400px', md: '400px', lg: '280px' }}
         >
-          <Typography variant="h3">Login</Typography>
+          <Typography variant={isSmScreen ? 'h4' : 'h3'}>Login</Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormControl
               fullWidth
@@ -106,6 +113,10 @@ const Login: React.FC = () => {
               </Button>
             </FormControl>
           </form>
+          <Typography variant="caption">
+            You don't have an account yet ?{' '}
+            <Link href="/register">Go to Register</Link>
+          </Typography>
         </Stack>
       </Stack>
     </>
