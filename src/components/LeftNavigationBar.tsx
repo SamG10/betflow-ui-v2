@@ -73,7 +73,7 @@ const LeftNavigationBar: React.FC = () => {
             <Typography variant="h5" fontWeight="bold" gutterBottom>
               Account
             </Typography>
-            <Button href="/register" variant="outlined">
+            <Button href="/login" variant="outlined">
               Login / Register
             </Button>
           </Stack>
@@ -92,17 +92,19 @@ const LeftNavigationBar: React.FC = () => {
             >
               Dashboard
             </Button>
-            <Button
-              href="/myBets"
-              variant={
-                location.pathname === '/myBets' ? 'contained' : 'outlined'
-              }
-              startIcon={
-                <img src="src/assets/my-bets-logo.png" alt="my-bets-logo" />
-              }
-            >
-              My Bets
-            </Button>
+            {isAuthenticated && (
+              <Button
+                href="/myBets"
+                variant={
+                  location.pathname === '/myBets' ? 'contained' : 'outlined'
+                }
+                startIcon={
+                  <img src="src/assets/my-bets-logo.png" alt="my-bets-logo" />
+                }
+              >
+                My Bets
+              </Button>
+            )}
             <Button
               href="liveEvents"
               variant={
