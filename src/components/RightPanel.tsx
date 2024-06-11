@@ -18,6 +18,7 @@ import { fetchSaveBets } from '../services/bets.service';
 const RightPanel: React.FC = () => {
   const theme = useTheme();
   const isMdScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const isLgScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
   const { bets, deleteBetFromBets, deleteAllBets } = useBetsStore();
 
@@ -85,10 +86,12 @@ const RightPanel: React.FC = () => {
             justifyContent="space-between"
             padding="20px"
             marginBottom={1.5}
-            height="30%"
+            height="150px"
           >
-            <img src="src\assets\fire.svg" alt="fire" width="45px" />
-            <Typography variant="h5">
+            {!isMdScreen && (
+              <img src="src\assets\fire.svg" alt="fire" width="45px" />
+            )}
+            <Typography variant="h6">
               Double your winnings today only!
             </Typography>
             <Typography variant="caption">
@@ -105,13 +108,13 @@ const RightPanel: React.FC = () => {
           justifyContent="space-between"
           bgcolor={theme.palette.background.paper}
           borderRadius="20px"
-          height={isMdScreen ? 'calc(100vh - 30%)' : 'calc(100vh - 40px)'}
+          height={isLgScreen ? 'calc(100vh - 45px)' : 'calc(100vh - 250px)'}
         >
           <Typography variant="h6">{bets.length} bets selected</Typography>
           <Stack
             className={styles.displayBets}
             overflow={'scroll'}
-            height={isMdScreen ? 'calc(100vh - 400px)' : 'calc(100vh - 40px)'}
+            height={isLgScreen ? 'calc(100vh - 45px)' : 'calc(100vh - 40px)'}
           >
             {bets?.map((bet) => (
               <Stack
