@@ -1,6 +1,10 @@
 import {
   Button,
+  FormControl,
+  MenuItem,
   Paper,
+  Select,
+  SelectChangeEvent,
   Stack,
   Table,
   TableBody,
@@ -21,6 +25,7 @@ import { Event } from '../interfaces/event.interface';
 
 const MiddleBottomDashboard: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
+  const [competitionName, setCompetitionName] = useState<string>('Ligue 1');
   const bets = useBetsStore((state) => state.bets);
   const theme = useTheme();
   const isLgScreen = useMediaQuery(theme.breakpoints.up('lg'));
@@ -31,14 +36,16 @@ const MiddleBottomDashboard: React.FC = () => {
 
   useEffect(() => {
     const fetchEvents = async () => {
-      const response = await api.get('/events');
+      const response = await api.get('/events', {
+        params: { competitionName },
+      });
       if (response.data && response.data.length > 0) {
         setEvents(response.data[0].matches);
       }
     };
 
     fetchEvents();
-  }, []);
+  }, [competitionName]);
 
   const addEventsToBets = (bet: Bet) => {
     const existingBet = bets.find(
@@ -50,8 +57,49 @@ const MiddleBottomDashboard: React.FC = () => {
     }
   };
 
+  const handleCompetitionChange = (event: SelectChangeEvent<string>) => {
+    setCompetitionName(event.target.value);
+  };
+
   return (
     <>
+      <Stack direction="row" justifyContent="flex-start">
+        <FormControl
+          sx={{
+            m: 2,
+            minWidth: 200,
+            border: '1px olid #00A0F7',
+            borderRadius: '5px',
+          }}
+          size="small"
+        >
+          <Select
+            value={competitionName}
+            onChange={handleCompetitionChange}
+            variant="outlined"
+            sx={{
+              color: 'white',
+              '.MuiOutlinedInput-notchedOutline': {
+                borderColor: 'rgba(228, 219, 233, 0.25)',
+              },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'rgba(228, 219, 233, 0.25)',
+              },
+              '&:hover .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'rgba(228, 219, 233, 0.25)',
+              },
+              '.MuiSvgIcon-root ': {
+                fill: 'white !important',
+              },
+            }}
+          >
+            <MenuItem value="Ligue 1">Ligue 1</MenuItem>
+            <MenuItem value="European Championship">
+              European Championship
+            </MenuItem>
+          </Select>
+        </FormControl>
+      </Stack>
       <Stack
         className={styles.middleBottomDashboard}
         sx={{
