@@ -23,6 +23,7 @@ export interface Team {
   name: string;
   shortName: string;
   crest: string;
+  tla: string;
 }
 
 export interface StandingTable {
@@ -121,80 +122,81 @@ const MiddleTopDashboard: React.FC = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {standing[0]?.table?.map((t: StandingTable) => (
-                      <TableRow key={t.position}>
-                        <TableCell
-                          align="center"
-                          sx={{ padding: '4px', borderBottom: 'none' }}
-                        >
-                          <Typography fontWeight="bold">
-                            {t.position}
-                          </Typography>
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          sx={{ padding: '4px', borderBottom: 'none' }}
-                        >
-                          <Stack
-                            direction="row"
-                            spacing={1}
-                            alignItems="center"
+                    {standing[0]?.table?.map((t: StandingTable) => {
+                      return (
+                        <TableRow key={t.position}>
+                          <TableCell
+                            align="center"
+                            sx={{ padding: '4px', borderBottom: 'none' }}
                           >
-                            <img
-                              src={t.team.crest}
-                              alt="team logo"
-                              width="25px"
-                            />
+                            <Typography fontWeight="bold">
+                              {t.position}
+                            </Typography>
+                          </TableCell>
+                          <TableCell
+                            align="center"
+                            sx={{ padding: '4px', borderBottom: 'none' }}
+                          >
                             <Stack
-                              style={{
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                              }}
+                              direction="row"
+                              spacing={1}
+                              alignItems="center"
                             >
-                              <Typography>{t.team.shortName}</Typography>
-                            </Stack>
-                          </Stack>
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          sx={{ padding: '4px', borderBottom: 'none' }}
-                        >
-                          <Typography variant="body1" fontWeight="bold">
-                            {t.points}
-                          </Typography>
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            padding: '4px',
-                            borderBottom: 'none',
-                          }}
-                        >
-                          <Stack direction="row" spacing={0.5}>
-                            {t.form.split(',').map((f, index) => (
-                              <Box
-                                key={index}
-                                sx={{
-                                  width: 20,
-                                  height: 20,
-                                  backgroundColor: formColorBackground(f),
-                                  borderRadius: '4px',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  fontWeight: 'bold',
+                              <img
+                                src={t.team.crest}
+                                alt="team logo"
+                                width="25px"
+                              />
+                              <Stack
+                                style={{
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
                                 }}
                               >
-                                <Typography variant="body2">{f}</Typography>
-                              </Box>
-                            ))}
-                          </Stack>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                                <Typography>{t.team.tla}</Typography>
+                              </Stack>
+                            </Stack>
+                          </TableCell>
+                          <TableCell
+                            align="center"
+                            sx={{ padding: '4px', borderBottom: 'none' }}
+                          >
+                            <Typography variant="body1" fontWeight="bold">
+                              {t.points}
+                            </Typography>
+                          </TableCell>
+                          <TableCell
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              padding: '4px',
+                              borderBottom: 'none',
+                            }}
+                          >
+                            <Stack direction="row" spacing={0.5}>
+                              {t.form.split(',').map((f, index) => (
+                                <Box
+                                  key={index}
+                                  sx={{
+                                    width: 20,
+                                    height: 20,
+                                    backgroundColor: formColorBackground(f),
+                                    borderRadius: '4px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontWeight: 'bold',
+                                  }}
+                                >
+                                  <Typography variant="body2">{f}</Typography>
+                                </Box>
+                              ))}
+                            </Stack>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -222,19 +224,19 @@ const MiddleTopDashboard: React.FC = () => {
           {/* Hidden on screens smaller than medium (md) */}
           <Hidden lgDown>
             <Stack
-              bgcolor={theme.palette.background.paper}
+              className={style.gradientRankingUsers}
               height="270px"
               width="calc((100% / 3) - 30px)"
               borderRadius="20px"
               display="flex"
+              direction="column"
+              justifyContent="center"
               padding="10px"
             >
               <Stack className={style.hideScrollBar} overflow="scroll">
                 {rankingUsers?.length > 0 ? (
                   rankingUsers.map((users, index) => {
-                    const indexColor = Object.values([1, 2, 3]).includes(
-                      index + 1
-                    )
+                    const indexColor = Object.values([0, 1, 2]).includes(index)
                       ? '#00A0F7'
                       : '#77777';
                     return (
@@ -258,17 +260,16 @@ const MiddleTopDashboard: React.FC = () => {
                             {index + 1}
                           </Typography>
                         </Stack>
-                        <Avatar sx={{ width: 30, height: 30 }} />
+                        <Avatar sx={{ width: 50, height: 50 }} />
                         <Typography
-                          variant="body1"
+                          variant="h5"
                           color="white"
                           fontWeight="bold"
+                          width="50px"
                         >
                           {users.coins}
                         </Typography>
-                        <Typography variant="body1">
-                          {users.firstname}
-                        </Typography>
+                        <Typography variant="h6">{users.firstname}</Typography>
                       </Stack>
                     );
                   })
