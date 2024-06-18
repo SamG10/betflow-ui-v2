@@ -262,12 +262,11 @@ const MiddleTopDashboard: React.FC = () => {
                         </Stack>
                         <Avatar sx={{ width: 50, height: 50 }} />
                         <Typography
-                          variant="h5"
+                          variant="body1"
                           color="white"
                           fontWeight="bold"
-                          width="50px"
                         >
-                          {users.coins}
+                          {users.coins.toFixed(2)}
                         </Typography>
                         <Typography variant="h6">{users.firstname}</Typography>
                       </Stack>

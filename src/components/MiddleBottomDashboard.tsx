@@ -36,12 +36,51 @@ const MiddleBottomDashboard: React.FC = () => {
   const { addBetToBets } = useBetsStore();
 
   useEffect(() => {
+    const fetchEvents = async (competition: string) => {
+      const response = await api.get('/events', {
+        params: { competitionName: competition },
+      });
+      if (response.data && response.data.length > 0) {
+        const eventsWithOdds = response.data[0].matches.map((event: Event) => ({
+          ...event,
+          odds: {
+            homeWin: generateRandomOdds(1.0, 5.0, 2),
+            draw: generateRandomOdds(1.0, 5.0, 2),
+            awayWin: generateRandomOdds(1.0, 5.0, 2),
+          },
+        }));
+        return eventsWithOdds;
+      }
+      return [];
+    };
+
+    const fetchInitialEvents = async () => {
+      let events = await fetchEvents('Ligue 1');
+      if (events.length === 0) {
+        events = await fetchEvents('European Championship');
+        setCompetitionName('European Championship');
+      }
+      setEvents(events);
+    };
+
+    fetchInitialEvents();
+  }, []);
+
+  useEffect(() => {
     const fetchEvents = async () => {
       const response = await api.get('/events', {
         params: { competitionName },
       });
       if (response.data && response.data.length > 0) {
-        setEvents(response.data[0].matches);
+        const eventsWithOdds = response.data[0].matches.map((event: Event) => ({
+          ...event,
+          odds: {
+            homeWin: generateRandomOdds(1.0, 5.0, 2),
+            draw: generateRandomOdds(1.0, 5.0, 2),
+            awayWin: generateRandomOdds(1.0, 5.0, 2),
+          },
+        }));
+        setEvents(eventsWithOdds);
       }
     };
 
@@ -60,6 +99,15 @@ const MiddleBottomDashboard: React.FC = () => {
 
   const handleCompetitionChange = (event: SelectChangeEvent<string>) => {
     setCompetitionName(event.target.value);
+  };
+
+  const generateRandomOdds = (
+    min: number,
+    max: number,
+    decimalPlaces: number
+  ) => {
+    const randomNum = Math.random() * (max - min) + min;
+    return parseFloat(randomNum.toFixed(decimalPlaces));
   };
 
   return (
@@ -324,7 +372,7 @@ const MiddleBottomDashboard: React.FC = () => {
                                   : 'outlined'
                               }
                               onClick={() => {
-                                if (event.odds.homeWin) {
+                                if (event.odds.awayWin) {
                                   addEventsToBets({
                                     eventId: event.id,
                                     odd: event.odds.awayWin,
@@ -384,10 +432,10 @@ const MiddleBottomDashboard: React.FC = () => {
                                   : 'outlined'
                               }
                               onClick={() => {
-                                if (event.odds.homeWin) {
+                                if (event.odds.awayWin) {
                                   addEventsToBets({
                                     eventId: event.id,
-                                    odd: event.odds.homeWin,
+                                    odd: event.odds.awayWin,
                                     team: 'AWAY_TEAM',
                                     endDateEvent: event.lastUpdated,
                                     homeTeamOdd: event.odds.homeWin,
@@ -402,7 +450,7 @@ const MiddleBottomDashboard: React.FC = () => {
                                 }
                               }}
                             >
-                              {event.odds.homeWin ?? 'X'}
+                              {event.odds.awayWin ?? 'X'}
                             </Button>
                           )}
                         </TableCell>
