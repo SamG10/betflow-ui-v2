@@ -92,9 +92,6 @@ const MyBets: React.FC = () => {
                   Score
                 </TableCell>
                 <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                  Win / Loss
-                </TableCell>
-                <TableCell align="center" sx={{ borderBottom: 'none' }}>
                   Stake
                 </TableCell>
                 <TableCell align="center" sx={{ borderBottom: 'none' }}>
@@ -191,16 +188,19 @@ const MyBets: React.FC = () => {
                     </Typography>
                   </TableCell>
                   <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                    <Typography variant="body1">
-                      {bet?.betResult ?? 'None result for this moment'}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="center" sx={{ borderBottom: 'none' }}>
                     <Typography variant="body1">{bet?.stake}</Typography>
                   </TableCell>
                   <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                    <Typography variant="body1">
-                      {bet?.payed ? bet?.coinsGain : 'Bet in progress'}
+                    <Typography
+                      variant="body1"
+                      color={
+                        bet?.betResult && bet.betResult === 'Winner'
+                          ? 'lightgreen'
+                          : 'red'
+                      }
+                      fontWeight="bold"
+                    >
+                      {bet?.payed ? bet?.coinsGain : ''}
                     </Typography>
                   </TableCell>
                 </TableRow>
