@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { getUserInfo } from '../services/users.service';
+import { getUserBets } from '../services/users.service';
 import {
+  Box,
   Button,
+  Grid,
   Paper,
   Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Typography,
+  useTheme,
 } from '@mui/material';
 
 interface Bet {
   _id: string;
+  eventId: string;
+  competitionName: string;
   eventDate: string;
   homeTeamName: string;
   homeTeamLogo: string;
@@ -33,182 +32,247 @@ interface Bet {
   coinsGain: number;
 }
 
-interface UserInfo {
-  bets: Bet[];
-}
-
 const MyBets: React.FC = () => {
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const [bets, setBets] = useState<Bet[] | null>(null);
+  const theme = useTheme();
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
+    const fetchUserBets = async () => {
       try {
-        const user = await getUserInfo();
-        setUserInfo(user);
+        const bets = await getUserBets();
+        setBets(bets);
       } catch (error) {
         console.log(error);
       }
     };
 
-    fetchUserInfo();
+    fetchUserBets();
   }, []);
 
   return (
     <>
-      <Typography variant="h5">My Bets</Typography>
-      <Stack>
-        <TableContainer
-          component={Paper}
-          sx={{
-            width: '100%',
-            borderRadius: '20px',
-          }}
-        >
-          <Table aria-label="simple table" stickyHeader>
-            <TableHead>
-              <TableRow>
-                <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                  EventDate
-                </TableCell>
-                <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                  Home
-                </TableCell>
-                <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                  1
-                </TableCell>
-                <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                  X
-                </TableCell>
-                <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                  2
-                </TableCell>
-                <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                  Away
-                </TableCell>
-                <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                  Status
-                </TableCell>
-                <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                  Score
-                </TableCell>
-                <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                  Stake
-                </TableCell>
-                <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                  CoinsGain
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {userInfo?.bets?.map((bet) => (
-                <TableRow key={bet._id}>
-                  <TableCell
-                    component="th"
-                    scope="row"
-                    sx={{ borderBottom: 'none' }}
+      <Box sx={{ overflow: 'auto', maxHeight: '100vh' }}>
+        <Grid container spacing={2}>
+          {bets?.map((bet, index) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+              <Paper
+                elevation={3}
+                sx={{
+                  padding: '16px',
+                  bgcolor: theme.palette.background.paper,
+                  borderRadius: '16px',
+                }}
+              >
+                <Stack
+                  direction="row"
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems={'center'}
+                >
+                  <Typography
+                    variant="caption"
+                    flexWrap="wrap"
+                    textOverflow="ellipsis"
+                    overflow="hidden"
+                    textAlign="start"
+                    width="80px"
                   >
-                    {bet.eventDate.split('T')[0]} -
-                    {bet.eventDate.split('T')[1].substring(0, 8)}
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      borderBottom: 'none',
-                    }}
+                    {bet?.competitionName}
+                  </Typography>
+                  <Stack
+                    direction="column"
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    width="100px"
                   >
-                    <Typography
-                      variant="caption"
-                      sx={{ marginRight: '10px', width: '100px' }}
-                    >
-                      {bet.homeTeamName}
+                    <Typography variant="caption" textAlign="center">
+                      {bet?.eventDate.split('T')[0]}
                     </Typography>
-                    <img
-                      src={bet.homeTeamLogo}
-                      alt="home_team_logo"
-                      width="50px"
-                    />
-                  </TableCell>
-                  <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                    <Button
-                      variant={
-                        bet?.odd === bet.homeTeamOdd ? 'contained' : 'outlined'
-                      }
-                    >
-                      {bet.homeTeamOdd}
-                    </Button>
-                  </TableCell>
-                  <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                    <Button
-                      variant={
-                        bet?.odd === bet.drawTeamOdd ? 'contained' : 'outlined'
-                      }
-                    >
-                      {bet.drawTeamOdd}
-                    </Button>
-                  </TableCell>
-                  <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                    <Button
-                      variant={
-                        bet?.odd === bet.awayTeamOdd ? 'contained' : 'outlined'
-                      }
-                    >
-                      {bet.awayTeamOdd}
-                    </Button>
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderBottom: 'none',
-                    }}
+                    <Typography variant="caption" textAlign="center">
+                      {bet?.eventDate.split('T')[1].substring(0, 8)}
+                    </Typography>
+                  </Stack>
+                  <Typography
+                    variant="caption"
+                    flexWrap="wrap"
+                    textAlign="end"
+                    textOverflow="ellipsis"
+                    overflow="hidden"
+                    width="80px"
                   >
-                    <Typography
-                      variant="caption"
-                      sx={{ marginRight: '10px', width: '100px' }}
+                    {bet.status.toLowerCase()}
+                  </Typography>
+                </Stack>
+                <Grid
+                  container
+                  spacing={1}
+                  justifyContent="space-around"
+                  alignItems="center"
+                >
+                  <Grid item xs={4}>
+                    <Stack
+                      direction="column"
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
                     >
-                      {bet.awayTeamName}
-                    </Typography>
-                    <img
-                      src={bet.awayTeamLogo}
-                      alt="home_team_logo"
-                      width="50px"
-                    />
-                  </TableCell>
-                  <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                    <Typography variant="body1">{bet.status}</Typography>
-                  </TableCell>
-                  <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                    <Typography variant="body1">
-                      {bet?.scoreHome} - {bet?.scoreAway}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                    <Typography variant="body1">{bet?.stake}</Typography>
-                  </TableCell>
-                  <TableCell align="center" sx={{ borderBottom: 'none' }}>
-                    <Typography
-                      variant="body1"
-                      color={
-                        bet?.betResult && bet.betResult === 'Winner'
-                          ? 'lightgreen'
-                          : 'red'
-                      }
-                      fontWeight="bold"
+                      <img
+                        src={bet.homeTeamLogo}
+                        alt="home_team_logo"
+                        width="50px"
+                        height="50px"
+                      />
+                      <Typography
+                        variant="body1"
+                        width="70px"
+                        textAlign="center"
+                        mb={1}
+                        mt={1}
+                        sx={{
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {bet.homeTeamName}
+                      </Typography>
+                      <Button
+                        variant={
+                          bet.odd === bet.homeTeamOdd ? 'contained' : 'outlined'
+                        }
+                      >
+                        {bet.homeTeamOdd}
+                      </Button>
+                    </Stack>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Stack
+                      direction="column"
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
                     >
-                      {bet?.payed ? bet?.coinsGain : ''}
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Stack>
+                      <Typography variant="h5" fontWeight="bold" mb={1}>
+                        {bet.scoreHome} - {bet.scoreAway}
+                      </Typography>
+                      <Button
+                        variant={
+                          bet.odd === bet.drawTeamOdd ? 'contained' : 'outlined'
+                        }
+                      >
+                        {bet.drawTeamOdd}
+                      </Button>
+                    </Stack>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Stack
+                      direction="column"
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <img
+                        src={bet.awayTeamLogo}
+                        alt="away_team_logo"
+                        width="50px"
+                        height="50px"
+                      />
+                      <Typography
+                        variant="body1"
+                        textAlign="center"
+                        mb={1}
+                        mt={1}
+                        width="70px"
+                        sx={{
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {bet.awayTeamName}
+                      </Typography>
+                      <Button
+                        variant={
+                          bet.odd === bet.awayTeamOdd ? 'contained' : 'outlined'
+                        }
+                      >
+                        {bet.awayTeamOdd}
+                      </Button>
+                    </Stack>
+                  </Grid>
+                </Grid>
+                <Grid
+                  container
+                  spacing={1}
+                  justifyContent="space-around"
+                  alignItems="center"
+                  mt={2}
+                >
+                  <Grid item xs={6}>
+                    <Stack
+                      direction="column"
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Typography variant="body2" mb={1}>
+                        Stake
+                      </Typography>
+                      <Button variant="outlined">{bet.stake}</Button>
+                    </Stack>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Stack
+                      direction="column"
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Typography variant="body2" mb={1}>
+                        Gain
+                      </Typography>
+                      <Button
+                        variant="outlined"
+                        sx={{
+                          borderColor:
+                            bet.coinsGain > 0
+                              ? '#76ff03'
+                              : bet.coinsGain <= 0
+                              ? '#FF3D30'
+                              : '#959595',
+                          color:
+                            bet.coinsGain > 0
+                              ? '#76ff03'
+                              : bet.coinsGain <= 0
+                              ? '#FF3D30'
+                              : '#959595',
+                          '&:hover': {
+                            borderColor:
+                              bet.coinsGain > 0
+                                ? '#76ff03'
+                                : bet.coinsGain <= 0
+                                ? '#FF3D30'
+                                : '#959595',
+                            color:
+                              bet.coinsGain > 0
+                                ? '#76ff03'
+                                : bet.coinsGain <= 0
+                                ? '#FF3D30'
+                                : '#959595',
+                          },
+                        }}
+                      >
+                        {bet.coinsGain ?? '-'}
+                      </Button>
+                    </Stack>
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
     </>
   );
 };

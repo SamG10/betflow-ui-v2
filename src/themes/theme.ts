@@ -51,5 +51,12 @@ export default createTheme({
         },
       },
     },
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          color: '#ffffff',
+        },
+      },
+    },
   },
 });

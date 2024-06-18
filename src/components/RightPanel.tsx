@@ -144,11 +144,12 @@ const RightPanel: React.FC = () => {
                     placeholder="stake"
                     type="number"
                     size="small"
+                    inputProps={{
+                      step: '0.01',
+                      min: '0.00',
+                    }}
                     onChange={(e) =>
-                      handleStakeChange(
-                        bet.eventId,
-                        parseInt(e.target.value, 10)
-                      )
+                      handleStakeChange(bet.eventId, parseFloat(e.target.value))
                     }
                   />
                 </Stack>
@@ -163,7 +164,7 @@ const RightPanel: React.FC = () => {
           <Snackbar
             sx={{ backgroundColor: 'orange', color: 'orange' }}
             open={open}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             autoHideDuration={6000}
             onClose={() => setOpen(false)}
             message={error}

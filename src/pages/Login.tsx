@@ -8,14 +8,18 @@ import {
   Link,
   useMediaQuery,
   useTheme,
+  InputAdornment,
+  IconButton,
 } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../services/users.service';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../contexts/AuthContext';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email').min(1, 'Email is required'),
@@ -30,6 +34,16 @@ const Login: React.FC = () => {
 
   const { login, refreshUser } = useAuth();
   const navigate = useNavigate();
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
 
   const defaultValues = {
     email: '',
@@ -94,18 +108,34 @@ const Login: React.FC = () => {
                   defaultValue={defaultValues.email}
                   error={!!errors.email}
                   helperText={errors.email?.message}
-                  sx={{ marginBottom: '10px' }}
+                  sx={{ marginBottom: '10px', width: '246px' }}
                 />
               </Stack>
               <Stack>
                 <FormLabel>Password</FormLabel>
                 <TextField
-                  type="password"
+                  id="outlined-adornment-password"
+                  type={showPassword ? 'text' : 'password'}
                   {...register('password')}
                   defaultValue={defaultValues.password}
                   error={!!errors.password}
                   helperText={errors.password?.message}
                   sx={{ marginBottom: '10px' }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          sx={{ color: 'white' }}
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Stack>
               <Button type="submit" variant="contained">
