@@ -263,7 +263,7 @@ const MyBets: React.FC = () => {
                           },
                         }}
                       >
-                        {bet.coinsGain ?? '-'}
+                        {bet.coinsGain.toFixed(2) ?? '-'}
                       </Button>
                     </Stack>
                   </Grid>
