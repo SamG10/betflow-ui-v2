@@ -18,6 +18,7 @@ import { getRanking } from '../services/users.service';
 export interface RankingUser {
   firstname: string;
   coins: number;
+  avatar?: string;
 }
 
 const RankingUsers: React.FC = () => {
@@ -65,10 +66,15 @@ const RankingUsers: React.FC = () => {
                   <TableCell sx={{ border: 'none' }}>{index + 1}</TableCell>
                   {isLargeScreen && (
                     <TableCell sx={{ border: 'none' }}>
-                      <Avatar sx={{ width: 30, height: 30 }} />
+                      <Avatar
+                        sx={{ width: 30, height: 30 }}
+                        src={user?.avatar ?? ''}
+                      />
                     </TableCell>
                   )}
-                  <TableCell sx={{ border: 'none' }}>{user.coins}</TableCell>
+                  <TableCell sx={{ border: 'none' }}>
+                    {user.coins.toFixed(2)}
+                  </TableCell>
                   <TableCell sx={{ border: 'none' }}>
                     {user.firstname}
                   </TableCell>

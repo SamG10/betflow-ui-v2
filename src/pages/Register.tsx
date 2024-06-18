@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   FormControl,
   FormLabel,
+  IconButton,
+  InputAdornment,
   Link,
   Stack,
   TextField,
@@ -15,12 +17,15 @@ import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const registerSchema = z.object({
   email: z.string().email('Invalid email').min(1, 'Email is required'),
   password: z.string().min(3, 'Password must be at least 3 characters long'),
   firstname: z.string().min(1, 'Firstname is required'),
   lastname: z.string().min(1, 'Lastname is required'),
+  avatar: z.string().optional(),
 });
 type FormData = z.infer<typeof registerSchema>;
 
@@ -35,6 +40,7 @@ const Register: React.FC = () => {
     password: '',
     firstname: '',
     lastname: '',
+    avatar: '',
   };
 
   const {
@@ -46,6 +52,16 @@ const Register: React.FC = () => {
     resolver: zodResolver(registerSchema),
     defaultValues,
   });
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
 
   const onSubmit: SubmitHandler<FormData> = (data: FormData) => {
     registerUser(data);
@@ -92,7 +108,7 @@ const Register: React.FC = () => {
                   defaultValue={defaultValues.firstname}
                   error={!!errors.firstname}
                   helperText={errors.firstname?.message}
-                  sx={{ marginBottom: '10px' }}
+                  sx={{ marginBottom: '10px', width: '246px' }}
                 />
               </Stack>
               <Stack>
@@ -103,7 +119,22 @@ const Register: React.FC = () => {
                   defaultValue={defaultValues.lastname}
                   error={!!errors.lastname}
                   helperText={errors.lastname?.message}
-                  sx={{ marginBottom: '10px' }}
+                  sx={{ marginBottom: '10px', width: '246px' }}
+                />
+              </Stack>
+              <Stack>
+                <FormLabel>Avatar</FormLabel>
+                <TextField
+                  type="text"
+                  {...register('avatar')}
+                  defaultValue={defaultValues.avatar}
+                  error={!!errors.avatar}
+                  helperText={
+                    errors.avatar?.message
+                      ? errors.avatar?.message
+                      : '(Optional) or put an image url'
+                  }
+                  sx={{ marginBottom: '10px', width: '246px' }}
                 />
               </Stack>
               <Stack>
@@ -114,18 +145,34 @@ const Register: React.FC = () => {
                   defaultValue={defaultValues.email}
                   error={!!errors.email}
                   helperText={errors.email?.message}
-                  sx={{ marginBottom: '10px' }}
+                  sx={{ marginBottom: '10px', width: '246px' }}
                 />
               </Stack>
               <Stack>
                 <FormLabel>Password</FormLabel>
                 <TextField
-                  type="password"
+                  id="outlined-adornment-password"
+                  type={showPassword ? 'text' : 'password'}
                   {...register('password')}
                   defaultValue={defaultValues.password}
                   error={!!errors.password}
                   helperText={errors.password?.message}
                   sx={{ marginBottom: '10px' }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          sx={{ color: 'white' }}
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               </Stack>
               <Button type="submit" variant="contained">

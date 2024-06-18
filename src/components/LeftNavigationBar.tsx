@@ -87,8 +87,17 @@ const LeftNavigationBar: React.FC = () => {
               href="/"
               variant={location.pathname === '/' ? 'contained' : 'outlined'}
               startIcon={
-                <img src="src/assets/dashboard-logo.png" alt="dashboard-logo" />
+                <img
+                  style={{
+                    width: '24px',
+                    marginRight: '10px',
+                    marginLeft: '28px',
+                  }}
+                  src="src/assets/dashboard-logo.png"
+                  alt="dashboard-logo"
+                />
               }
+              sx={{ justifyContent: 'flex-start', textAlign: 'left' }}
             >
               Dashboard
             </Button>
@@ -99,8 +108,17 @@ const LeftNavigationBar: React.FC = () => {
                   location.pathname === '/myBets' ? 'contained' : 'outlined'
                 }
                 startIcon={
-                  <img src="src/assets/my-bets-logo.png" alt="my-bets-logo" />
+                  <img
+                    style={{
+                      width: '24px',
+                      marginRight: '10px',
+                      marginLeft: '28px',
+                    }}
+                    src="src/assets/my-bets-logo.png"
+                    alt="my-bets-logo"
+                  />
                 }
+                sx={{ justifyContent: 'flex-start', textAlign: 'left' }}
               >
                 My Bets
               </Button>
@@ -110,7 +128,18 @@ const LeftNavigationBar: React.FC = () => {
               variant={
                 location.pathname === '/liveEvents' ? 'contained' : 'outlined'
               }
-              startIcon={<img src="src/assets/live-logo.png" alt="live-logo" />}
+              startIcon={
+                <img
+                  style={{
+                    width: '24px',
+                    marginRight: '10px',
+                    marginLeft: '28px',
+                  }}
+                  src="src/assets/live-logo.png"
+                  alt="live-logo"
+                />
+              }
+              sx={{ justifyContent: 'flex-start', textAlign: 'left' }}
             >
               Live Events
             </Button>
@@ -120,8 +149,17 @@ const LeftNavigationBar: React.FC = () => {
                 location.pathname === '/standings' ? 'contained' : 'outlined'
               }
               startIcon={
-                <img src="src/assets/standings.png" alt="standings-logo" />
+                <img
+                  style={{
+                    width: '24px',
+                    marginRight: '10px',
+                    marginLeft: '28px',
+                  }}
+                  src="src/assets/standings.png"
+                  alt="standings-logo"
+                />
               }
+              sx={{ justifyContent: 'flex-start', textAlign: 'left' }}
             >
               Standings
             </Button>
@@ -132,10 +170,16 @@ const LeftNavigationBar: React.FC = () => {
               }
               startIcon={
                 <img
+                  style={{
+                    width: '24px',
+                    marginRight: '10px',
+                    marginLeft: '28px',
+                  }}
                   src="src/assets/ranking-users.png"
                   alt="ranking-users-logo"
                 />
               }
+              sx={{ justifyContent: 'flex-start', textAlign: 'left' }}
             >
               Ranking Users
             </Button>
@@ -144,9 +188,13 @@ const LeftNavigationBar: React.FC = () => {
       </Stack>
       <Button color="inherit" onClick={logout}>
         <img
+          style={{
+            width: '24px',
+            marginRight: '10px',
+            marginLeft: '28px',
+          }}
           src="src/assets/logout-logo.svg"
           alt="logout"
-          style={{ width: '24px' }}
         />
       </Button>
     </Box>

@@ -43,6 +43,7 @@ export interface Standing {
 export interface RankingUser {
   firstname: string;
   coins: number;
+  avatar?: string;
 }
 
 const MiddleTopDashboard: React.FC = () => {
@@ -224,7 +225,7 @@ const MiddleTopDashboard: React.FC = () => {
           {/* Hidden on screens smaller than medium (md) */}
           <Hidden lgDown>
             <Stack
-              className={style.gradientRankingUsers}
+              bgcolor={theme.palette.background.paper}
               height="270px"
               width="calc((100% / 3) - 30px)"
               borderRadius="20px"
@@ -237,7 +238,7 @@ const MiddleTopDashboard: React.FC = () => {
                 {rankingUsers?.length > 0 ? (
                   rankingUsers.map((users, index) => {
                     const indexColor = Object.values([0, 1, 2]).includes(index)
-                      ? '#00A0F7'
+                      ? '#FFB800'
                       : '#77777';
                     return (
                       <Stack
@@ -260,7 +261,10 @@ const MiddleTopDashboard: React.FC = () => {
                             {index + 1}
                           </Typography>
                         </Stack>
-                        <Avatar sx={{ width: 50, height: 50 }} />
+                        <Avatar
+                          sx={{ width: 50, height: 50 }}
+                          src={users?.avatar ?? ''}
+                        />
                         <Typography
                           variant="body1"
                           color="white"

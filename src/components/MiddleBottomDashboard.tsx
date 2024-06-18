@@ -41,15 +41,7 @@ const MiddleBottomDashboard: React.FC = () => {
         params: { competitionName: competition },
       });
       if (response.data && response.data.length > 0) {
-        const eventsWithOdds = response.data[0].matches.map((event: Event) => ({
-          ...event,
-          odds: {
-            homeWin: generateRandomOdds(1.0, 5.0, 2),
-            draw: generateRandomOdds(1.0, 5.0, 2),
-            awayWin: generateRandomOdds(1.0, 5.0, 2),
-          },
-        }));
-        return eventsWithOdds;
+        return response.data[0].matches;
       }
       return [];
     };
@@ -72,14 +64,7 @@ const MiddleBottomDashboard: React.FC = () => {
         params: { competitionName },
       });
       if (response.data && response.data.length > 0) {
-        const eventsWithOdds = response.data[0].matches.map((event: Event) => ({
-          ...event,
-          odds: {
-            homeWin: generateRandomOdds(1.0, 5.0, 2),
-            draw: generateRandomOdds(1.0, 5.0, 2),
-            awayWin: generateRandomOdds(1.0, 5.0, 2),
-          },
-        }));
+        const eventsWithOdds = response.data[0].matches;
         setEvents(eventsWithOdds);
       }
     };
@@ -99,15 +84,6 @@ const MiddleBottomDashboard: React.FC = () => {
 
   const handleCompetitionChange = (event: SelectChangeEvent<string>) => {
     setCompetitionName(event.target.value);
-  };
-
-  const generateRandomOdds = (
-    min: number,
-    max: number,
-    decimalPlaces: number
-  ) => {
-    const randomNum = Math.random() * (max - min) + min;
-    return parseFloat(randomNum.toFixed(decimalPlaces));
   };
 
   return (
@@ -268,6 +244,7 @@ const MiddleBottomDashboard: React.FC = () => {
                                     odd: event.odds.homeWin,
                                     team: 'HOME_TEAM',
                                     endDateEvent: event.lastUpdated,
+                                    competitionName: event.competition.name,
                                     homeTeamOdd: event.odds.homeWin,
                                     awayTeamOdd: event.odds.awayWin,
                                     drawTeamOdd: event.odds.draw,
@@ -308,6 +285,7 @@ const MiddleBottomDashboard: React.FC = () => {
                                     endDateEvent: event.lastUpdated,
                                     homeTeamOdd: event.odds.homeWin,
                                     awayTeamOdd: event.odds.awayWin,
+                                    competitionName: event.competition.name,
                                     drawTeamOdd: event.odds.draw,
                                     homeTeamName: event.homeTeam.name,
                                     awayTeamName: event.awayTeam.name,
@@ -343,6 +321,7 @@ const MiddleBottomDashboard: React.FC = () => {
                                   homeTeamOdd: event.odds.homeWin,
                                   awayTeamOdd: event.odds.awayWin,
                                   drawTeamOdd: event.odds.draw,
+                                  competitionName: event.competition.name,
                                   homeTeamName: event.homeTeam.name,
                                   awayTeamName: event.awayTeam.name,
                                   homeTeamLogo: event.homeTeam.crest,
@@ -380,6 +359,7 @@ const MiddleBottomDashboard: React.FC = () => {
                                     endDateEvent: event.lastUpdated,
                                     homeTeamOdd: event.odds.homeWin,
                                     awayTeamOdd: event.odds.awayWin,
+                                    competitionName: event.competition.name,
                                     drawTeamOdd: event.odds.draw,
                                     homeTeamName: event.homeTeam.name,
                                     awayTeamName: event.awayTeam.name,
@@ -441,6 +421,7 @@ const MiddleBottomDashboard: React.FC = () => {
                                     homeTeamOdd: event.odds.homeWin,
                                     awayTeamOdd: event.odds.awayWin,
                                     drawTeamOdd: event.odds.draw,
+                                    competitionName: event.competition.name,
                                     homeTeamName: event.homeTeam.name,
                                     awayTeamName: event.awayTeam.name,
                                     homeTeamLogo: event.homeTeam.crest,

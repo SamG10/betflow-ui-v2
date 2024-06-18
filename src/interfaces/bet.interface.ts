@@ -9,6 +9,7 @@ export interface Bet {
   homeTeamName: string;
   awayTeamName: string;
   homeTeamLogo: string;
+  competitionName: string;
   awayTeamLogo: string;
   eventDate: string;
 }

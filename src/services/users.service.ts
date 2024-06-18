@@ -60,6 +60,20 @@ export const getUserInfo = async () => {
   return response.data;
 };
 
+export const getUserBets = async () => {
+  const access_token = localStorage.getItem('access_token');
+
+  const profile = await getProfile();
+
+  const response = await api.get(`/users/${profile._id}/bets`, {
+    headers: {
+      Authorization: `Bearer ${access_token} `,
+    },
+  });
+
+  return response.data;
+};
+
 export const getRanking = async () => {
   const access_token = localStorage.getItem('access_token');
 
