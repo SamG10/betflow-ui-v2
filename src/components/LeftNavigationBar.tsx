@@ -6,23 +6,72 @@ import {
   Drawer,
   Hidden,
   IconButton,
+  Modal,
   Stack,
+  TextField,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import React, { useState } from 'react';
 import styles from '../styles/LeftNavigationBar.module.css';
 import { useTheme, Theme } from '@mui/material/styles';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import { useAuth } from '../contexts/AuthContext';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import { editUserProfile } from '../services/users.service';
+import useFormWithErrorHandling from '../hooks/FormErrorHandling';
 
 const LeftNavigationBar: React.FC = () => {
   const theme: Theme = useTheme();
-  const { isAuthenticated, user, logout } = useAuth();
+  const isXsDown = useMediaQuery(theme.breakpoints.down('xs'));
+
+  const { isAuthenticated, user, logout, refreshUser } = useAuth();
+
+  const { handleFormError } = useFormWithErrorHandling();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    firstname: '',
+    lastname: '',
+    avatar: '',
+  });
 
   const toggleDrawer = (open: boolean) => () => {
     setDrawerOpen(open);
+  };
+
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async () => {
+    try {
+      if (user && user._id) {
+        await editUserProfile(user._id, formData);
+        refreshUser();
+        setFormData({
+          firstname: '',
+          lastname: '',
+          avatar: '',
+        });
+      }
+      handleModalClose();
+    } catch (error) {
+      handleFormError(error);
+    }
   };
 
   const sidebarContent = (
@@ -35,9 +84,12 @@ const LeftNavigationBar: React.FC = () => {
         {isAuthenticated && user ? (
           <Stack direction="column" spacing={2} paddingTop={2}>
             <Stack direction="row">
-              <Typography variant="h5" fontWeight="bold" gutterBottom>
+              <Typography variant="h5" fontWeight="bold" gutterBottom mr={1}>
                 Profile
               </Typography>
+              <IconButton onClick={() => handleModalOpen()}>
+                <ModeEditIcon fontSize="small" color="info" />
+              </IconButton>
             </Stack>
             <Stack direction="row" spacing={2} alignItems="center">
               <Avatar
@@ -211,6 +263,52 @@ const LeftNavigationBar: React.FC = () => {
           {sidebarContent}
         </Drawer>
       </Hidden>
+      <Modal open={modalOpen} onClose={handleModalClose}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: isXsDown ? '90%' : 300,
+            maxWidth: '90%',
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            p: 4,
+            borderRadius: '10px',
+          }}
+        >
+          <Typography variant="h6" gutterBottom>
+            Edit Profile
+          </Typography>
+          <Stack spacing={2}>
+            <TextField
+              label="First Name"
+              name="firstname"
+              value={formData.firstname}
+              onChange={handleInputChange}
+              fullWidth
+            />
+            <TextField
+              label="Last Name"
+              name="lastname"
+              value={formData.lastname}
+              onChange={handleInputChange}
+              fullWidth
+            />
+            <TextField
+              label="Avatar URL"
+              name="avatar"
+              value={formData.avatar}
+              onChange={handleInputChange}
+              fullWidth
+            />
+            <Button variant="contained" color="primary" onClick={handleSubmit}>
+              Save
+            </Button>
+          </Stack>
+        </Box>
+      </Modal>
     </>
   );
 };

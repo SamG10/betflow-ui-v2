@@ -85,3 +85,18 @@ export const getRanking = async () => {
 
   return response.data;
 };
+
+export const editUserProfile = async (
+  userId: string,
+  data: Partial<{ firstname: string; lastname: string; avatar: string }>
+) => {
+  const access_token = localStorage.getItem('access_token');
+
+  const response = await api.patch(`users/${userId}`, data, {
+    headers: {
+      Authorization: `Bearer ${access_token} `,
+    },
+  });
+
+  return response.data;
+};
