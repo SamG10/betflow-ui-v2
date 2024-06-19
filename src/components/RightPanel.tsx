@@ -1,7 +1,6 @@
 import {
   Button,
   Hidden,
-  Snackbar,
   Stack,
   TextField,
   Typography,
@@ -14,6 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import styles from '../styles/RightPanel.module.css';
 import { useState } from 'react';
 import { fetchSaveBets } from '../services/bets.service';
+import useFormWithErrorHandling from '../hooks/FormErrorHandling';
 
 const RightPanel: React.FC = () => {
   const theme = useTheme();
@@ -24,8 +24,7 @@ const RightPanel: React.FC = () => {
 
   const [stakes, setStakes] = useState<{ [key: string]: number }>({});
 
-  const [open, setOpen] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { handleFormError } = useFormWithErrorHandling();
 
   const handleStakeChange = (betId: number, value: number) => {
     setStakes((prevStakes) => {
@@ -50,12 +49,7 @@ const RightPanel: React.FC = () => {
       await fetchSaveBets(betsToSave);
       deleteAllBets();
     } catch (error: unknown) {
-      setOpen(true);
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError(String(error));
-      }
+      handleFormError(error);
     }
   };
 
@@ -161,14 +155,6 @@ const RightPanel: React.FC = () => {
               Save bets
             </Button>
           </Stack>
-          <Snackbar
-            sx={{ backgroundColor: 'orange', color: 'orange' }}
-            open={open}
-            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-            autoHideDuration={6000}
-            onClose={() => setOpen(false)}
-            message={error}
-          />
         </Stack>
       </Stack>
     </>
